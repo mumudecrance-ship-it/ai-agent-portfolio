@@ -1,0 +1,104 @@
+{
+  "task": "晒图优选",
+  "created_at": "2026-06-15 00:50:19",
+  "current_step": "DONE",
+  "steps": {
+    "S1": {
+      "name": "业务澄清",
+      "artifact": "01-工作流画像.md",
+      "gate": "check_profile.py",
+      "status": "passed",
+      "passed_at": "2026-06-15 00:53:04",
+      "note": "一次过闸"
+    },
+    "S2": {
+      "name": "依赖分析",
+      "artifact": "02-依赖清单.md",
+      "gate": "check_dependencies.py",
+      "status": "passed",
+      "passed_at": "2026-06-15 00:53:04",
+      "note": "七项依赖:五已有两缺口含替代口径"
+    },
+    "S3": {
+      "name": "流程拆解与设计审查",
+      "artifact": "03-流程拆解.md",
+      "gate": "check_decomposition.py",
+      "status": "passed",
+      "passed_at": "2026-06-15 00:53:04",
+      "note": "8步单LLM,展示侧剔除口径与质量管控转审口径显式区分"
+    },
+    "S4": {
+      "name": "节点映射",
+      "artifact": "04-节点方案.md",
+      "gate": "validate_solution.py",
+      "status": "passed",
+      "passed_at": "2026-06-15 00:54:49",
+      "note": "15节点全在库,四路并行汇聚,门禁曾拦下缺依赖能力列的表格"
+    },
+    "S5": {
+      "name": "prompt起草",
+      "artifact": "05-prompts/",
+      "gate": "schema 完整性校验",
+      "status": "passed",
+      "passed_at": "2026-06-15 01:01:26",
+      "note": "单LLM节点prompt:含负面证言与未使用两类易混淆例"
+    },
+    "S6": {
+      "name": "方法论审查",
+      "artifact": "06-审查报告.md",
+      "gate": "五条清零",
+      "status": "passed",
+      "passed_at": "2026-06-15 01:01:26",
+      "note": "五条全通过,剔除与转审口径差异显式"
+    },
+    "S7": {
+      "name": "平台落地跑通",
+      "artifact": "07-dsl.json + 08-跑通报告.md",
+      "gate": "platform_deploy.py + platform_run.py",
+      "status": "passed",
+      "passed_at": "2026-06-15 01:02:02",
+      "note": "六用例全过:证言/盗图/AI图/泛评/无图/错误注入"
+    }
+  },
+  "history": [
+    {
+      "at": "2026-06-15 00:50:19",
+      "event": "init"
+    },
+    {
+      "at": "2026-06-15 00:53:04",
+      "event": "S1 passed",
+      "note": "一次过闸"
+    },
+    {
+      "at": "2026-06-15 00:53:04",
+      "event": "S2 passed",
+      "note": "七项依赖:五已有两缺口含替代口径"
+    },
+    {
+      "at": "2026-06-15 00:53:04",
+      "event": "S3 passed",
+      "note": "8步单LLM,展示侧剔除口径与质量管控转审口径显式区分"
+    },
+    {
+      "at": "2026-06-15 00:54:49",
+      "event": "S4 passed",
+      "note": "15节点全在库,四路并行汇聚,门禁曾拦下缺依赖能力列的表格"
+    },
+    {
+      "at": "2026-06-15 01:01:26",
+      "event": "S5 passed",
+      "note": "单LLM节点prompt:含负面证言与未使用两类易混淆例"
+    },
+    {
+      "at": "2026-06-15 01:01:26",
+      "event": "S6 passed",
+      "note": "五条全通过,剔除与转审口径差异显式"
+    },
+    {
+      "at": "2026-06-15 01:02:02",
+      "event": "S7 passed",
+      "note": "六用例全过:证言/盗图/AI图/泛评/无图/错误注入"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "task": "评价问答抽取",
+  "created_at": "2026-06-18 00:50:19",
+  "current_step": "DONE",
+  "steps": {
+    "S1": {
+      "name": "业务澄清",
+      "artifact": "01-工作流画像.md",
+      "gate": "check_profile.py",
+      "status": "passed",
+      "passed_at": "2026-06-18 01:03:54",
+      "note": "一次过闸"
+    },
+    "S2": {
+      "name": "依赖分析",
+      "artifact": "02-依赖清单.md",
+      "gate": "check_dependencies.py",
+      "status": "passed",
+      "passed_at": "2026-06-18 01:03:54",
+      "note": "六项依赖:复用工作流资产库取高质量子集"
+    },
+    "S3": {
+      "name": "流程拆解与设计审查",
+      "artifact": "03-流程拆解.md",
+      "gate": "check_decomposition.py",
+      "status": "passed",
+      "passed_at": "2026-06-18 01:03:54",
+      "note": "6步单LLM,三处早停各有独立出口"
+    },
+    "S4": {
+      "name": "节点映射",
+      "artifact": "04-节点方案.md",
+      "gate": "validate_solution.py",
+      "status": "passed",
+      "passed_at": "2026-06-18 01:03:54",
+      "note": "14节点全在库"
+    },
+    "S5": {
+      "name": "prompt起草",
+      "artifact": "05-prompts/",
+      "gate": "schema 完整性校验",
+      "status": "passed",
+      "passed_at": "2026-06-18 02:48:58",
+      "note": "抽取类prompt:答案原声不许改写为易混淆例"
+    },
+    "S6": {
+      "name": "方法论审查",
+      "artifact": "06-审查报告.md",
+      "gate": "五条清零",
+      "status": "passed",
+      "passed_at": "2026-06-18 02:48:58",
+      "note": "五条全通过"
+    },
+    "S7": {
+      "name": "平台落地跑通",
+      "artifact": "07-dsl.json + 08-跑通报告.md",
+      "gate": "platform_deploy.py + platform_run.py",
+      "status": "passed",
+      "passed_at": "2026-06-18 06:57:42",
+      "note": "首跑dedup代码节点作用域bug真实翻车,修复后四用例全过"
+    }
+  },
+  "history": [
+    {
+      "at": "2026-06-18 00:50:19",
+      "event": "init"
+    },
+    {
+      "at": "2026-06-18 01:03:54",
+      "event": "S1 passed",
+      "note": "一次过闸"
+    },
+    {
+      "at": "2026-06-18 01:03:54",
+      "event": "S2 passed",
+      "note": "六项依赖:复用工作流资产库取高质量子集"
+    },
+    {
+      "at": "2026-06-18 01:03:54",
+      "event": "S3 passed",
+      "note": "6步单LLM,三处早停各有独立出口"
+    },
+    {
+      "at": "2026-06-18 01:03:54",
+      "event": "S4 passed",
+      "note": "14节点全在库"
+    },
+    {
+      "at": "2026-06-18 02:48:58",
+      "event": "S5 passed",
+      "note": "抽取类prompt:答案原声不许改写为易混淆例"
+    },
+    {
+      "at": "2026-06-18 02:48:58",
+      "event": "S6 passed",
+      "note": "五条全通过"
+    },
+    {
+      "at": "2026-06-18 06:57:42",
+      "event": "S7 passed",
+      "note": "首跑dedup代码节点作用域bug真实翻车,修复后四用例全过"
+    }
+  ]
+}

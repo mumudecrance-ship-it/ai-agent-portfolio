@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# 工具产物
+.playwright-cli/
+
+# 密钥（仅示例文件入库）
+config.env
+.env
+
+# IDE
+.idea/
+.vscode/

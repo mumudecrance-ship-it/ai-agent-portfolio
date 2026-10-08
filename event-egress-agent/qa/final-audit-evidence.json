@@ -1,0 +1,86 @@
+{
+  "project": "大型活动推演 Agent",
+  "demo_path": "..",
+  "mode": "audit-and-repair",
+  "hard_gates": {
+    "main_flow": true,
+    "fixed_result": true,
+    "human_gate": true,
+    "unauthorized_rejected": true,
+    "reset_replay": true,
+    "browser_desktop": true,
+    "browser_mobile": true,
+    "console_and_regression_clean": true
+  },
+  "scores": {
+    "task_clarity": 8,
+    "business_completeness": 20,
+    "product_specificity": 15,
+    "real_assets": 9,
+    "visual_hierarchy": 13,
+    "evidence_credibility": 14,
+    "interaction_recovery": 10,
+    "responsive_accessibility": 4
+  },
+  "evidence": [
+    {
+      "kind": "fixed_abc_and_twelve_round_replay",
+      "result": "HTTP 实测 A=10,280人/24分钟/2.767/9溢出轮，X=8,640人/24分钟/3.762/11溢出轮，B=12,000人/16分钟/0.476/0溢出轮；三者均返回12轮轨迹，页面展示 Agent→Skill→规则→引擎→人工五段交接。",
+      "gates": ["main_flow", "fixed_result"]
+    },
+    {
+      "kind": "human_confirmation_gate",
+      "result": "A 与 X 的 REPLAN_REQUIRED 结果确认均被拒绝；B 缺版本摘要返回 VERSION_REQUIRED，携带最新 candidate_digest 且具名后返回 HUMAN_CONFIRMED。修后浏览器中 A 的确认控件禁用，B 可进入具名确认。",
+      "gates": ["human_gate"]
+    },
+    {
+      "kind": "permission_boundary",
+      "result": "POST /api/external-action 返回 HTTP 403 / EXTERNAL_AUTHORITY_REQUIRED；页面明确只生成本地候选记录，不执行封路、调度、闸机或公众引导。",
+      "gates": ["unauthorized_rejected"]
+    },
+    {
+      "kind": "reset_generation_and_replay",
+      "result": "复位会递增对应模式 generation、清空候选与确认；旧请求无法回写。回归测试覆盖 newer-run 与 reset 两类失效提交，复位后 B 可再次稳定返回同一12轮与指标。",
+      "gates": ["reset_replay"]
+    },
+    {
+      "kind": "desktop_browser_after",
+      "result": "1280px 修后截图 qa/final-audit-after-desktop-1280.png；固定任务、场馆蓝图、五段数据流与 A/B/C 入口正常显示，浏览器交互无报错。",
+      "gates": ["browser_desktop"]
+    },
+    {
+      "kind": "mobile_browser_after",
+      "result": "390×844 修后截图 qa/final-audit-after-mobile-390.png；无横向溢出，表单缺标签0、图片缺alt0，B 指标与确认闸可完成。",
+      "gates": ["browser_mobile"]
+    },
+    {
+      "kind": "console_tests_and_skill_eval",
+      "result": "浏览器控制台 error=0、warning=0；最终包与源目录各38/38单测通过，Python编译与 app.js Node语法通过，Skill 正向/歧义/负向/越权4/4通过。",
+      "gates": ["console_and_regression_clean"]
+    }
+  ],
+  "priority_issues": [
+    {
+      "priority": "P1",
+      "issue": "REPLAN_REQUIRED 结果可被错误确认",
+      "resolution": "服务端严格检查决策与版本摘要，前端仅在最新 PENDING_HUMAN_CONFIRMATION 结果上开放确认。"
+    },
+    {
+      "priority": "P1",
+      "issue": "运行、复位和模式切换存在旧请求回写与控件竞态",
+      "resolution": "增加每模式 generation、失效提交拒绝、运行锁和 token 守卫。"
+    },
+    {
+      "priority": "P1",
+      "issue": "固定合同指标与确定性引擎存在双真相",
+      "resolution": "project.json 校准到当前确定性回放，run_fixed 强制 computed.metrics 为唯一权威并加回归。"
+    }
+  ],
+  "limitations": [
+    "390px 下完整 Agent 说明仍排在主任务面板之前，首次运行入口需要较长滚动。",
+    "品牌首页链接约34px、人工确认输入约38px，未全部达到44px触控建议值。",
+    "页面仍可见部分英文状态码与“Demo 到哪里停”等实现层文案，属于后续文案精修。",
+    "实时路径只验证了自然语言输入下的缺 Key 明确停止；本轮没有写入 Key，也没有调用真实外部 API。",
+    "最终 detector 的 side-tab warning 实际命中圆形勾选图标的2px勾线，不是卡片侧边强调；grid advisory 命中场馆蓝图与仿真地图，属于已批准的业务画布。"
+  ]
+}

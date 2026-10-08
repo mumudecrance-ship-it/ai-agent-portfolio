@@ -1,0 +1,84 @@
+{
+  "task": "存量评价全量重打标",
+  "created_at": "2026-06-10 22:48:04",
+  "current_step": "S4",
+  "steps": {
+    "S1": {
+      "name": "业务澄清",
+      "artifact": "01-工作流画像.md",
+      "gate": "check_profile.py",
+      "status": "passed",
+      "passed_at": "2026-06-10 22:49:05",
+      "note": "一次过闸"
+    },
+    "S2": {
+      "name": "依赖分析",
+      "artifact": "02-依赖清单.md",
+      "gate": "check_dependencies.py",
+      "status": "passed",
+      "passed_at": "2026-06-10 22:49:36",
+      "note": "门禁拦下未沉淀的新产工作流,回流入库后通过"
+    },
+    "S3": {
+      "name": "流程拆解与设计审查",
+      "artifact": "03-流程拆解.md",
+      "gate": "check_decomposition.py",
+      "status": "passed",
+      "passed_at": "2026-06-10 22:49:36",
+      "note": "开销预估否决全量重打,改为过滤子集+增量常驻"
+    },
+    "S4": {
+      "name": "节点映射",
+      "artifact": "04-节点方案.md",
+      "gate": "validate_solution.py",
+      "status": "in_progress",
+      "passed_at": null,
+      "note": ""
+    },
+    "S5": {
+      "name": "prompt起草",
+      "artifact": "05-prompts/",
+      "gate": "schema 完整性校验",
+      "status": "pending",
+      "passed_at": null,
+      "note": ""
+    },
+    "S6": {
+      "name": "方法论审查",
+      "artifact": "06-审查报告.md",
+      "gate": "五条清零",
+      "status": "pending",
+      "passed_at": null,
+      "note": ""
+    },
+    "S7": {
+      "name": "平台落地跑通",
+      "artifact": "07-dsl.json + 08-跑通报告.md",
+      "gate": "platform_deploy.py + platform_run.py",
+      "status": "pending",
+      "passed_at": null,
+      "note": ""
+    }
+  },
+  "history": [
+    {
+      "at": "2026-06-10 22:48:04",
+      "event": "init"
+    },
+    {
+      "at": "2026-06-10 22:49:05",
+      "event": "S1 passed",
+      "note": "一次过闸"
+    },
+    {
+      "at": "2026-06-10 22:49:36",
+      "event": "S2 passed",
+      "note": "门禁拦下未沉淀的新产工作流,回流入库后通过"
+    },
+    {
+      "at": "2026-06-10 22:49:36",
+      "event": "S3 passed",
+      "note": "开销预估否决全量重打,改为过滤子集+增量常驻"
+    }
+  ]
+}

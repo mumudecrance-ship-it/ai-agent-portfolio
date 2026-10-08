@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <meta name="color-scheme" content="light">
+  <title>大型活动推演 Agent</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#main" aria-label="回到工作台顶部">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span><strong id="product-name">大型活动推演 Agent</strong><small id="product-subtitle">正在读取项目合同</small></span>
+    </a>
+    <div class="top-actions">
+      <span id="source-badge" class="source-badge fixed">固定回归</span>
+      <button id="open-config" class="quiet-button" type="button">API 设置</button>
+    </div>
+  </header>
+
+  <main id="main" class="workspace" tabindex="-1">
+    <aside class="rail">
+      <section class="mission">
+        <p id="user-moment"></p>
+        <h1 id="mission-title">正在载入任务</h1>
+        <p id="mission-copy"></p>
+      </section>
+
+      <nav class="mode-switch" aria-label="运行模式">
+        <button class="mode active" data-mode="fixed" type="button" aria-pressed="true"><span>固定回归</span><small>重放同一场馆的三种方案</small></button>
+        <button class="mode" data-mode="live" type="button" aria-pressed="false"><span>我的推演</span><small>真实 API + 自己的场馆输入</small></button>
+      </nav>
+
+      <section class="agent-map" aria-labelledby="agent-title">
+        <div class="section-heading"><h2 id="agent-title">四个 Agent 如何接力</h2><button id="toggle-agents" class="text-button" type="button" aria-expanded="false" aria-controls="agent-list">展开输入输出</button></div>
+        <ol id="agent-list"></ol>
+      </section>
+
+      <section class="responsibility-strip" aria-label="责任分工">
+        <div data-owner="agent"><span>Agent</span><strong>理解与提意图</strong></div>
+        <div data-owner="skill"><span>Skill</span><strong id="skill-name">加载稳定方法</strong></div>
+        <div data-owner="rule"><span>规则 / 引擎</span><strong>校验与确定性结算</strong></div>
+        <div data-owner="human"><span>人工</span><strong>查看证据并确认</strong></div>
+      </section>
+    </aside>
+
+    <section class="stage">
+      <div class="stage-header">
+        <div><p id="case-kicker" class="case-id"></p><h2 id="case-title">固定案例</h2><p id="case-summary"></p></div>
+        <div class="status-stack"><span>当前状态</span><strong id="current-status">READY</strong><small id="status-reason">选择一种方案开始</small></div>
+      </div>
+
+      <section class="runtime-flow" aria-labelledby="flow-title">
+        <div class="flow-heading"><h3 id="flow-title">本轮数据流</h3><p id="flow-caption">尚未运行；流程状态会按真实交接结果回放。</p></div>
+        <ol id="flow-track" class="flow-track">
+          <li data-flow="agent"><span class="flow-dot"></span><small>Agent</small><strong>变化理解</strong><em>待开始</em></li>
+          <li data-flow="skill"><span class="flow-dot"></span><small>Skill</small><strong>方法合同</strong><em>待开始</em></li>
+          <li data-flow="rule"><span class="flow-dot"></span><small>规则</small><strong>边界校验</strong><em>待开始</em></li>
+          <li data-flow="engine"><span class="flow-dot"></span><small>引擎</small><strong>12 轮复算</strong><em>待开始</em></li>
+          <li data-flow="human"><span class="flow-dot"></span><small>人工</small><strong>确认候选</strong><em>未到达</em></li>
+        </ol>
+      </section>
+
+      <section id="fixed-panel" class="panel active" aria-label="固定回归">
+        <div id="case-visual" class="case-visual" aria-label="固定场馆出口图"></div>
+        <div class="fixed-note"><strong>固定案例不调用模型</strong><span>三个按钮共用同一份场馆、事件和 Skill 门禁，便于看清首次分歧。</span></div>
+        <div class="outcome-controls" id="outcome-controls"></div>
+        <div id="fixed-result" class="result-board empty"><p>选择一种方案，观看 Agent 意图、队列传播和 12 轮仿真怎样流转。</p></div>
+      </section>
+
+      <section id="live-panel" class="panel" aria-label="个人实时推演">
+        <div class="live-intro"><div><h3 id="live-title">配置你的场馆</h3><p id="live-description"></p></div><span id="api-status" class="api-chip">未连接</span></div>
+
+        <form id="live-form" class="live-form">
+          <section class="venue-editor" aria-labelledby="venue-config-title">
+            <div class="editor-heading"><div><h3 id="venue-config-title">场馆基础信息</h3><p>出口 ID 是 AI 草案与仿真引擎之间的共同坐标。</p></div><span id="exit-count" class="count-chip">4 / 8 个出口</span></div>
+            <div class="venue-fields">
+              <label>场馆名称<input id="venue-name" name="venue_name" maxlength="60" required></label>
+              <label>预计总人数<input id="audience-count" name="audience_count" type="number" min="100" max="200000" step="100" required></label>
+            </div>
+            <div class="exit-editor-head"><div><strong>出口与每轮容量</strong><small>每轮 2 分钟；容量是仿真输入，不是现实通行承诺。</small></div><button id="add-exit" class="quiet-button" type="button">添加出口</button></div>
+            <div id="exit-rows" class="exit-rows"></div>
+            <label class="full-field">分区或客群说明（可选）<textarea id="zone-notes" name="zone_notes" maxlength="2000" placeholder="例如：东区观众更靠近地铁，南区家庭观众较多。"></textarea></label>
+          </section>
+
+          <section class="venue-preview-shell" aria-labelledby="venue-preview-title">
+            <div class="preview-copy"><h3 id="venue-preview-title">场馆草图</h3><p>修改出口方位或容量时，这里会同步更新。未单独列出客群时，本地代码会均分生成最多 4 个仿真客群，供 Agent 引用 G1—G4。</p></div>
+            <div id="live-venue-preview" class="venue-blueprint compact" aria-live="polite"></div>
+          </section>
+
+          <section class="event-editor" aria-labelledby="event-title">
+            <div class="editor-heading"><div><h3 id="event-title">用自然语言描述这次变化</h3><p>可以写一件事，也可以写多件同时发生的事；不需要填固定模板。</p></div></div>
+            <label class="full-field">事件描述<textarea id="event-description" name="event_description" minlength="8" maxlength="6000" required></textarea></label>
+            <label class="full-field">来源或备注（可选）<input id="event-source" name="event_source" maxlength="160" value="自行设定的活动预演条件"></label>
+          </section>
+
+          <div class="submit-band">
+            <div><strong>真实 API 调用</strong><span>只发送当前场馆档案与事件文字；不读取现实轨迹或生产地图数据。</span></div>
+            <button id="run-live" class="primary-action" type="submit">整理变化并运行 A/B/C</button>
+          </div>
+        </form>
+        <div id="live-result" class="result-board empty"><p>实时结果只使用本轮输入。API 失败时会明确停止，不会切回固定案例。</p></div>
+      </section>
+
+      <section class="human-gate" aria-labelledby="gate-title">
+        <div><span class="gate-icon" aria-hidden="true"></span><h3 id="gate-title">人工确认闸</h3><p id="gate-copy"></p></div>
+        <form id="confirm-form"><label>确认人<input id="reviewer" name="reviewer" autocomplete="name" placeholder="先运行可确认候选" disabled></label><button class="confirm-button" type="submit" disabled>确认当前候选</button></form>
+      </section>
+
+      <footer class="boundary-bar">
+        <div><strong>Demo 到哪里停</strong><span id="boundary-copy"></span></div>
+        <div class="boundary-actions"><button id="external-action" class="danger-button" type="button">尝试现实动作</button><button id="reset" class="quiet-button" type="button">复位当前模式</button></div>
+      </footer>
+    </section>
+  </main>
+
+  <dialog id="config-dialog">
+    <form id="config-form" method="dialog">
+      <div class="dialog-heading"><div><h2>连接真实模型</h2><p>API Key 只发给本机 127.0.0.1，保存在 Python 进程内存，关闭服务即清除。</p></div><button id="close-config" class="quiet-button" aria-label="关闭 API 设置" type="button">关闭</button></div>
+      <label>API Key<input id="api-key" type="password" autocomplete="off" placeholder="sk-…"></label>
+      <label>模型<input id="api-model" value="deepseek-chat" autocomplete="off"></label>
+      <label>兼容端点<input id="api-base-url" value="https://api.deepseek.com/chat/completions" autocomplete="url"></label>
+      <div id="config-message" class="config-message">默认支持 DeepSeek Chat Completions，也可填写 OpenAI Responses 或兼容端点。页面不会保存 Key。</div>
+      <div class="dialog-actions"><button id="clear-config" class="quiet-button" type="button">清除内存 Key</button><button class="primary-action" type="submit">连接并保存到内存</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="project.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

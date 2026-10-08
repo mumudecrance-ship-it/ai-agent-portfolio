@@ -1,0 +1,50 @@
+{
+  "app": {"name": "评价质量管控-演示子集"},
+  "variables": [
+    {"name": "review_text", "type": "string", "required": true,
+     "example": "开放式厨房做饭油烟味半小时就散了，晚上开睡眠档基本听不到声音，只有凑近才有轻微嗡嗡声。App 远程开机很方便，下班路上打开到家空气就清新了。"},
+    {"name": "image_urls", "type": "array", "required": false, "example": ["img/u1a.jpg", "img/u1b.jpg"]},
+    {"name": "product_id", "type": "string", "required": true, "example": "100086651001"}
+  ],
+  "graph": {
+    "nodes": [
+      {"id": "start", "type": "start", "title": "开始"},
+      {"id": "len_check", "type": "code", "title": "是否大于60字",
+       "config": {"inputs": {"text": "{{#inputs.review_text#}}"},
+                  "code": "outputs = {\"gt60\": \"yes\" if len(inputs[\"text\"]) > 60 else \"no\", \"length\": len(inputs[\"text\"]) }"}},
+      {"id": "branch", "type": "if_else", "title": "字数分支",
+       "config": {"conditions": [{"left": "{{#len_check.gt60#}}", "op": "==", "right": "yes"}]}},
+      {"id": "same_img", "type": "http_request", "title": "同图识别",
+       "config": {"method": "POST", "url": "http://127.0.0.1:8787/mock/svc/same-image",
+                  "body": {"image_urls": "{{#inputs.image_urls#}}"}}},
+      {"id": "judge_hi", "type": "llm", "title": "大于60字低质量判定",
+       "config": {"prompt": "只做高质量与低质量判定，输出JSON{verdict,reason}。\n商品：{{#inputs.product_id#}}\n评价：{{#inputs.review_text#}}"}},
+      {"id": "judge_lo", "type": "llm", "title": "小于60字低质量判定",
+       "config": {"prompt": "只做普通与低质量判定，输出JSON{verdict,reason}。\n评价：{{#inputs.review_text#}}"}},
+      {"id": "template_chk", "type": "llm", "title": "套模板校验",
+       "config": {"prompt": "将本商品历史高质量评价作为参照，判断是否套模板，输出JSON{is_template,template_text}。\n评价：{{#inputs.review_text#}}"}},
+      {"id": "agg", "type": "variable_aggregator", "title": "判定聚合",
+       "config": {"strategy": "first_not_null",
+                  "variables": ["{{#judge_hi.json#}}", "{{#judge_lo.json#}}"]}},
+      {"id": "final", "type": "code", "title": "综合判断",
+       "config": {"inputs": {"llm": "{{#agg.output#}}", "img": "{{#same_img.body#}}",
+                             "tpl": "{{#template_chk.json#}}"},
+                  "code": "v = inputs[\"llm\"] or {}\nimg = inputs[\"img\"] or {}\ntpl = inputs[\"tpl\"] or {}\nlow = (v.get(\"verdict\") == 1) or (img.get(\"result\") == 2) or (tpl.get(\"is_template\") == 1)\noutputs = {\"quality\": \"低质量\" if low else \"高质量/普通\", \"need_human\": (img.get(\"result\") == 1), \"detail\": {\"llm\": v, \"image\": img, \"template\": tpl}}"}},
+      {"id": "end", "type": "end", "title": "结束",
+       "config": {"outputs": {"quality": "{{#final.quality#}}", "need_human": "{{#final.need_human#}}", "detail": "{{#final.detail#}}"}}}
+    ],
+    "edges": [
+      {"source": "start", "target": "len_check"},
+      {"source": "start", "target": "same_img"},
+      {"source": "len_check", "target": "branch"},
+      {"source": "branch", "target": "judge_hi", "source_handle": "true"},
+      {"source": "branch", "target": "judge_lo", "source_handle": "false"},
+      {"source": "judge_hi", "target": "template_chk"},
+      {"source": "template_chk", "target": "agg"},
+      {"source": "judge_lo", "target": "agg"},
+      {"source": "same_img", "target": "final"},
+      {"source": "agg", "target": "final"},
+      {"source": "final", "target": "end"}
+    ]
+  }
+}

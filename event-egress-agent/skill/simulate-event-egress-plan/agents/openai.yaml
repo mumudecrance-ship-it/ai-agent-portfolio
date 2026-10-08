@@ -1,0 +1,4 @@
+interface:
+  display_name: "大型活动散场推演"
+  short_description: "生成可回放、可签发的多 Agent 大型活动散场方案"
+  default_prompt: "Use $simulate-event-egress-plan to compare and simulate event egress candidates before human sign-off."

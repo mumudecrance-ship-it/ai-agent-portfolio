@@ -1,0 +1,55 @@
+{
+  "case_id": "concert-egress-001",
+  "task_type": "large_event_egress_simulation",
+  "task_name": "星港体育中心演唱会散场推演",
+  "captured_at": "2026-08-13T22:00:00+08:00",
+  "event": {
+    "venue": "星港体育中心（固定案例）",
+    "audience_count": 12000,
+    "show_end": "22:10",
+    "tick_minutes": 2,
+    "max_ticks": 12
+  },
+  "exits": [
+    {"id": "E1", "name": "东门·地铁接驳", "capacity_per_tick": 820, "safe_queue": 2400, "x": 82, "y": 42},
+    {"id": "E2", "name": "南门·公交接驳", "capacity_per_tick": 720, "safe_queue": 2100, "x": 60, "y": 82},
+    {"id": "E3", "name": "西门·停车区", "capacity_per_tick": 640, "safe_queue": 1900, "x": 17, "y": 55},
+    {"id": "E4", "name": "北门·步行疏散", "capacity_per_tick": 520, "safe_queue": 1500, "x": 48, "y": 14}
+  ],
+  "groups": [
+    {"id": "G1", "name": "东看台客群", "people": 3300, "release_per_tick": 620, "origin": "S1", "x": 66, "y": 42},
+    {"id": "G2", "name": "南看台客群", "people": 3100, "release_per_tick": 600, "origin": "S2", "x": 54, "y": 65},
+    {"id": "G3", "name": "西看台客群", "people": 2900, "release_per_tick": 560, "origin": "S3", "x": 34, "y": 52},
+    {"id": "G4", "name": "北看台客群", "people": 2700, "release_per_tick": 520, "origin": "S4", "x": 48, "y": 33}
+  ],
+  "events": [
+    {"id": "RAIN", "name": "强降雨", "start_tick": 3, "end_tick": 12, "exit_id": "E4", "capacity_multiplier": 0.55, "description": "北门步行疏散能力下降"},
+    {"id": "METRO_CLOSE", "name": "地铁入口临时关闭", "start_tick": 4, "end_tick": 6, "exit_id": "E1", "capacity_multiplier": 0.0, "description": "东门地铁接驳暂停三轮"}
+  ],
+  "candidates": [
+    {
+      "id": "A",
+      "name": "最近出口优先",
+      "description": "沿最近出口分流，不保留事件后的局部重规划。",
+      "replan_mode": "none",
+      "reroute_ratio": 0.0,
+      "preferences": {"G1": ["E1", "E2"], "G2": ["E1", "E2"], "G3": ["E3", "E2"], "G4": ["E1", "E4"]}
+    },
+    {
+      "id": "B",
+      "name": "韧性均衡方案",
+      "description": "预留南西通道余量，事件发生后只重规划受影响客群。",
+      "replan_mode": "capacity_aware",
+      "reroute_ratio": 0.75,
+      "preferences": {"G1": ["E1", "E2"], "G2": ["E2", "E4"], "G3": ["E3", "E2"], "G4": ["E4", "E3"]}
+    },
+    {
+      "id": "C",
+      "name": "运力优先",
+      "description": "优先利用东门地铁接驳，拥堵后再进行有限改道。",
+      "replan_mode": "late",
+      "reroute_ratio": 0.35,
+      "preferences": {"G1": ["E1", "E2"], "G2": ["E1", "E2"], "G3": ["E3", "E2"], "G4": ["E1", "E4"]}
+    }
+  ]
+}

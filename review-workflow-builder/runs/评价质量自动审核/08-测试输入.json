@@ -1,0 +1,29 @@
+{
+  "cases": [
+    {"name": "高质量长评（带正常图）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "对比过三款，这台的优势是睡眠模式真的安静，28 分贝不虚标。缺点是滤芯更换提示偏灵敏，感觉还能用就提示换了。总体推荐给卧室使用的朋友。",
+       "image_urls": ["img/u7a.jpg", "img/u7b.jpg"], "user_level": "评价官", "inject": ""},
+     "expect": {"outputs.label": "高质量", "outputs.need_review": "False"}},
+    {"name": "站外引流短评（无图）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "想要优惠的姐妹去某宝搜同款旗舰店，领大额券便宜80，还送滤芯。",
+       "image_urls": [], "user_level": "普通", "inject": ""},
+     "expect": {"outputs.label": "低质量", "outputs.low_type": "广告引流"}},
+    {"name": "套模板长评+盗图",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "宝贝收到了，质量很好，卖家服务态度好，物流很快，包装严实，值得购买，下次还来，这条评价特意凑足六十个字以上走高质量判定分支。",
+       "image_urls": ["img/tpl-same-1.jpg"], "user_level": "普通", "inject": ""},
+     "expect": {"outputs.label": "低质量"}},
+    {"name": "疑似同图转人审（高质量文字+疑似图）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "对比过三款，这台的优势是睡眠模式真的安静，28 分贝不虚标。缺点是滤芯更换提示偏灵敏，感觉还能用就提示换了。总体推荐给卧室使用的朋友。",
+       "image_urls": ["img/suspect-1.jpg"], "user_level": "普通", "inject": ""},
+     "expect": {"outputs.label": "高质量", "outputs.need_review": "True"}},
+    {"name": "错误注入（同图接口500）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "对比过三款，这台的优势是睡眠模式真的安静，28 分贝不虚标。总体推荐给卧室使用的朋友，这条评价凑足六十字以上。",
+       "image_urls": ["img/u7a.jpg"], "user_level": "普通", "inject": "500"},
+     "expect_fail": true}
+  ]
+}

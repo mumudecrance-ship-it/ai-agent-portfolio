@@ -1,0 +1,12 @@
+{
+  "base": "http://127.0.0.1:8787",
+  "import": {
+    "imported": true,
+    "app_id": "1e37ea60",
+    "name": "追加评价引导文案"
+  },
+  "publish": {
+    "published": true,
+    "version": 1
+  }
+}

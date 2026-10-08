@@ -1,0 +1,17 @@
+{
+  "policy_version": "egress-policy@1.0.0",
+  "supported_task_type": "large_event_egress_simulation",
+  "clearance_window_minutes": 24,
+  "min_clearance_rate": 0.98,
+  "max_queue_density_ratio": 1.0,
+  "max_overflow_ticks": 0,
+  "replan_trigger_density": 0.82,
+  "max_replan_share_per_tick": 0.75,
+  "human_signature_required": true,
+  "prohibited_actions": [
+    "execute_road_closure",
+    "dispatch_real_transport",
+    "publish_public_guidance",
+    "write_production_map_policy"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "cases": [
+    {"name": "抽出问答对入池",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "开放式厨房做饭油烟味半小时就散了，晚上开睡眠档基本听不到声音，只有凑近才有轻微嗡嗡声。",
+       "existing_questions": ["滤芯多久换一次？"], "inject": ""},
+     "expect": {"outputs.need_review": "true", "outputs.entry.question": "晚上开睡眠档吵不吵？"}},
+    {"name": "与已有问题重复",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "开放式厨房做饭油烟味半小时就散了，晚上开睡眠档基本听不到声音，只有凑近才有轻微嗡嗡声。",
+       "existing_questions": ["晚上开睡眠档吵不吵？"], "inject": ""},
+     "expect": {"outputs.need_review": "false", "outputs.reason": "与该商品已有商品问答问题重复"}},
+    {"name": "泛评无问答",
+     "inputs": {"product_id": "100086651001", "review_text": "挺好的，物流快。",
+       "existing_questions": [], "inject": ""},
+     "expect": {"outputs.need_review": "false", "outputs.reason": "评价无隐含问答对"}},
+    {"name": "错误注入（敏感词接口500）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "开放式厨房做饭油烟味半小时就散了，晚上开睡眠档基本听不到声音，只有凑近才有轻微嗡嗡声。",
+       "existing_questions": [], "inject": "500"},
+     "expect_fail": true}
+  ]
+}

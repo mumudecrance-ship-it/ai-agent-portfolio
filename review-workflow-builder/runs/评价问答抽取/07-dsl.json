@@ -1,0 +1,60 @@
+{
+  "app": {"name": "评价问答抽取"},
+  "variables": [
+    {"name": "product_id", "type": "string", "required": true, "example": "100086651001"},
+    {"name": "review_text", "type": "string", "required": true,
+     "example": "开放式厨房做饭油烟味半小时就散了，晚上开睡眠档基本听不到声音，只有凑近才有轻微嗡嗡声。"},
+    {"name": "existing_questions", "type": "array", "required": false, "example": ["滤芯多久换一次？"]},
+    {"name": "inject", "type": "string", "required": false, "example": ""}
+  ],
+  "graph": {
+    "nodes": [
+      {"id": "start", "type": "start", "title": "开始"},
+      {"id": "detail", "type": "http_request", "title": "商品信息获取",
+       "config": {"method": "POST", "url": "http://127.0.0.1:8787/mock/item-center/detail",
+                  "body": {"product_id": "{{#inputs.product_id#}}"}}},
+      {"id": "extract", "type": "llm", "title": "问答对抽取",
+       "config": {"prompt": "判断评价是否隐含购前用户会问的问题并抽取一个问答对（答案必须原文引用），输出JSON{has_qa,question,answer_quote,confidence}。\n【商品】{{#detail.body.product.title#}}\n【评价】{{#inputs.review_text#}}"}},
+      {"id": "br_qa", "type": "if_else", "title": "是否抽出问答对",
+       "config": {"conditions": [{"left": "{{#extract.json.has_qa#}}", "op": "==", "right": "1"}]}},
+      {"id": "dedup", "type": "code", "title": "与已有问题去重",
+       "config": {"inputs": {"q": "{{#extract.json.question#}}", "ex": "{{#inputs.existing_questions#}}"},
+                  "code": "q = inputs[\"q\"] or \"\"\nex = inputs[\"ex\"] or []\nkey = q.replace(\"？\", \"\").replace(\"?\", \"\")\ndup = False\nfor e in ex:\n    if key and (key in e or e.replace(\"？\", \"\") in q):\n        dup = True\noutputs = {\"dup\": \"yes\" if dup else \"no\"}"}},
+      {"id": "br_dup", "type": "if_else", "title": "是否重复",
+       "config": {"conditions": [{"left": "{{#dedup.dup#}}", "op": "==", "right": "yes"}]}},
+      {"id": "sens", "type": "http_request", "title": "敏感词检测",
+       "config": {"method": "POST", "url": "http://127.0.0.1:8787/mock/svc/sensitive-words",
+                  "body": {"text": "{{#extract.json.question#}} {{#extract.json.answer_quote#}}",
+                           "__inject__": "{{#inputs.inject#}}"}}},
+      {"id": "br_hit", "type": "if_else", "title": "是否命中敏感词",
+       "config": {"conditions": [{"left": "{{#sens.body.hit#}}", "op": "==", "right": "True"}]}},
+      {"id": "pool", "type": "code", "title": "汇总审核池条目",
+       "config": {"inputs": {"pid": "{{#inputs.product_id#}}", "q": "{{#extract.json.question#}}",
+                             "a": "{{#extract.json.answer_quote#}}", "rv": "{{#inputs.review_text#}}"},
+                  "code": "outputs = {\"entry\": {\"product_id\": inputs[\"pid\"], \"question\": inputs[\"q\"], \"answer_quote\": inputs[\"a\"], \"review_quote\": inputs[\"rv\"][:50]}}"}},
+      {"id": "end_ok", "type": "end", "title": "结束-入运营审核池",
+       "config": {"outputs": {"need_review": "true", "entry": "{{#pool.entry#}}"}}},
+      {"id": "end_nofit", "type": "end", "title": "结束-无可抽取问答",
+       "config": {"outputs": {"need_review": "false", "reason": "评价无隐含问答对"}}},
+      {"id": "end_dup", "type": "end", "title": "结束-与已有问题重复",
+       "config": {"outputs": {"need_review": "false", "reason": "与该商品已有商品问答问题重复"}}},
+      {"id": "end_drop", "type": "end", "title": "结束-安全拦截",
+       "config": {"outputs": {"need_review": "false", "reason": "敏感词命中", "words": "{{#sens.body.words#}}"}}}
+    ],
+    "edges": [
+      {"source": "start", "target": "detail"},
+      {"source": "start", "target": "extract"},
+      {"source": "detail", "target": "extract"},
+      {"source": "extract", "target": "br_qa"},
+      {"source": "br_qa", "target": "dedup", "source_handle": "true"},
+      {"source": "br_qa", "target": "end_nofit", "source_handle": "false"},
+      {"source": "dedup", "target": "br_dup"},
+      {"source": "br_dup", "target": "end_dup", "source_handle": "true"},
+      {"source": "br_dup", "target": "sens", "source_handle": "false"},
+      {"source": "sens", "target": "br_hit"},
+      {"source": "br_hit", "target": "end_drop", "source_handle": "true"},
+      {"source": "br_hit", "target": "pool", "source_handle": "false"},
+      {"source": "pool", "target": "end_ok"}
+    ]
+  }
+}

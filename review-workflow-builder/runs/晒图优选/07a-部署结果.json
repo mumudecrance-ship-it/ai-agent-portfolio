@@ -1,0 +1,12 @@
+{
+  "base": "http://127.0.0.1:8787",
+  "import": {
+    "imported": true,
+    "app_id": "91fd80ec",
+    "name": "晒图优选"
+  },
+  "publish": {
+    "published": true,
+    "version": 1
+  }
+}

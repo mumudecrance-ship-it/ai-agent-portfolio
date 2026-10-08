@@ -1,0 +1,12 @@
+{
+  "base": "http://127.0.0.1:8787",
+  "import": {
+    "imported": true,
+    "app_id": "acde5483",
+    "name": "评价质量自动审核"
+  },
+  "publish": {
+    "published": true,
+    "version": 1
+  }
+}

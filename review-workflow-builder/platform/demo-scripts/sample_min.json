@@ -1,0 +1,20 @@
+{
+  "app": {"name": "冒烟-3节点最小流程"},
+  "variables": [
+    {"name": "review_text", "type": "string", "required": true,
+     "example": "这个净化器可真是太棒了啊，棒到我半夜被它的风声吵醒，感谢商家让我体验了守着拖拉机睡觉的感觉。"}
+  ],
+  "graph": {
+    "nodes": [
+      {"id": "start", "type": "start", "title": "开始"},
+      {"id": "judge", "type": "llm", "title": "低质量判定",
+       "config": {"prompt": "判断以下评价是否为低质量评价，输出JSON{verdict,reason}。\n评价：{{#inputs.review_text#}}"}},
+      {"id": "end", "type": "end", "title": "结束",
+       "config": {"outputs": {"verdict": "{{#judge.json.verdict#}}", "reason": "{{#judge.json.reason#}}"}}}
+    ],
+    "edges": [
+      {"source": "start", "target": "judge"},
+      {"source": "judge", "target": "end"}
+    ]
+  }
+}

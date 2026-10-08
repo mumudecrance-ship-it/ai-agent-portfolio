@@ -1,0 +1,13 @@
+{
+  "profile_version": "profile.v2-personal",
+  "project_id": "personal-event-egress",
+  "domain_label": "大型活动散场推演",
+  "base_case_id": "user-venue-preview",
+  "object_label": "出口或客群",
+  "step_label": "仿真轮次",
+  "step_window": {"min": 1, "max": 12},
+  "venue_limits": {"min_exits": 2, "max_exits": 8, "min_people": 100, "max_people": 200000},
+  "target_rule": "changes.target must match one exit id in the submitted venue profile",
+  "allowed_change_kinds": ["RAIN", "EXIT_CLOSED", "CAPACITY_CHANGE", "TRANSIT_CLOSED"],
+  "fixed_states": ["READY_FOR_HUMAN_REVIEW", "HUMAN_SIGNED"]
+}

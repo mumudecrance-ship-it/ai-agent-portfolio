@@ -1,0 +1,32 @@
+{
+  "cases": [
+    {"name": "优质带图证言（PLUS会员）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "家里有猫，开一晚上第二天桌面浮毛明显少了。滤芯抽出来全是灰，说明确实在干活。噪音方面睡眠档可以接受，强力档偏响。",
+       "image_urls": ["img/u3a.jpg"], "user_level": "PLUS会员", "inject": ""},
+     "expect": {"outputs.need_review": "true"}},
+    {"name": "盗图剔除",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "家里有猫，开一晚上第二天桌面浮毛明显少了。滤芯抽出来全是灰，说明确实在干活。",
+       "image_urls": ["img/tpl-same-1.jpg"], "user_level": "普通", "inject": ""},
+     "expect": {"outputs.need_review": "false", "outputs.drop_reason": "图片问题剔除"}},
+    {"name": "AI生成图剔除",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "家里有猫，开一晚上第二天桌面浮毛明显少了。滤芯抽出来全是灰，说明确实在干活。",
+       "image_urls": ["img/aigen-1.jpg"], "user_level": "评价官", "inject": ""},
+     "expect": {"outputs.need_review": "false", "outputs.drop_reason": "图片问题剔除"}},
+    {"name": "泛评无证言（图正常）",
+     "inputs": {"product_id": "100086651001", "review_text": "挺好的，物流快。",
+       "image_urls": ["img/u1a.jpg"], "user_level": "普通", "inject": ""},
+     "expect": {"outputs.need_review": "false", "outputs.drop_reason": "证言不足"}},
+    {"name": "无图跳过",
+     "inputs": {"product_id": "100086651001", "review_text": "开一晚上浮毛少了很多。",
+       "image_urls": [], "user_level": "普通", "inject": ""},
+     "expect": {"outputs.need_review": "false", "outputs.skip_reason": "无图评价不进晒图链路"}},
+    {"name": "错误注入（同图接口500）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "家里有猫，开一晚上第二天桌面浮毛明显少了。",
+       "image_urls": ["img/u3a.jpg"], "user_level": "普通", "inject": "500"},
+     "expect_fail": true}
+  ]
+}

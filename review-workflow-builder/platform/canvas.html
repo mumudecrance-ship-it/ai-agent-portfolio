@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>FlowBench · 工作流平台</title>
+<style>
+  :root{
+    --bg:#f2f4f7; --panel:#fff; --line:#e4e7ec; --txt:#101828; --sub:#667085;
+    --blue:#155eef; --blue-bg:#eff4ff; --green:#12b76a; --green-bg:#ecfdf3;
+    --red:#f04438; --red-bg:#fef3f2; --amber:#f79009; --amber-bg:#fffaeb;
+    --violet:#7a5af8; --violet-bg:#f5f3ff; --teal:#0e9384; --teal-bg:#f0fdf9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  header{height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px}
+  .logo .mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#155eef,#7a5af8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800}
+  .logo .tag{font-size:11px;color:var(--sub);font-weight:400;border:1px solid var(--line);border-radius:20px;padding:2px 8px}
+  #appTitle{font-size:14px;font-weight:600;margin-left:8px}
+  .badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600}
+  .badge.pub{background:var(--green-bg);color:var(--green)}
+  .badge.draft{background:var(--amber-bg);color:var(--amber)}
+  .spacer{flex:1}
+  button{font-family:inherit;font-size:13px;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-weight:600;transition:.15s}
+  .btn-pri{background:var(--blue);color:#fff}
+  .btn-pri:hover{background:#0f4cc9}
+  .btn-sec{background:#fff;color:var(--txt);border:1px solid var(--line)}
+  .btn-sec:hover{background:#f9fafb}
+  main{flex:1;display:flex;min-height:0}
+  /* ---- 左侧 ---- */
+  aside{width:230px;background:#fff;border-right:1px solid var(--line);padding:14px;overflow:auto;flex-shrink:0}
+  aside h3{font-size:12px;color:var(--sub);font-weight:600;margin:4px 0 10px;letter-spacing:.4px}
+  .app-item{padding:10px 12px;border-radius:10px;cursor:pointer;margin-bottom:6px;border:1px solid transparent}
+  .app-item:hover{background:#f9fafb}
+  .app-item.active{background:var(--blue-bg);border-color:#b2ccff}
+  .app-item .nm{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .app-item .mt{font-size:11px;color:var(--sub);margin-top:3px}
+  /* ---- 画布 ---- */
+  #canvasWrap{flex:1;position:relative;overflow:auto;background-image:radial-gradient(#d3d9e2 1px,transparent 1px);background-size:22px 22px}
+  #svg{position:absolute;top:0;left:0;pointer-events:none}
+  .node{position:absolute;width:220px;background:#fff;border:1.5px solid var(--line);border-radius:12px;box-shadow:0 1px 3px rgba(16,24,40,.08);cursor:pointer;transition:box-shadow .15s,border-color .15s}
+  .node:hover{box-shadow:0 4px 12px rgba(16,24,40,.14)}
+  .node.sel{border-color:var(--blue);box-shadow:0 0 0 3px #d1e0ff}
+  .node.ok{border-color:#a6f4c5}
+  .node.fail{border-color:var(--red);box-shadow:0 0 0 3px #fee4e2}
+  .node .hd{display:flex;align-items:center;gap:8px;padding:10px 12px}
+  .node .ic{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  .node .ti{font-size:13px;font-weight:600;line-height:1.3;flex:1;min-width:0}
+  .node .st{font-size:13px;flex-shrink:0}
+  .node .tp{font-size:10px;color:var(--sub);padding:0 12px 9px 44px;margin-top:-4px}
+  .node .ms{font-size:10px;color:var(--sub);position:absolute;right:10px;bottom:8px}
+  /* ---- 右侧 ---- */
+  #panel{width:330px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0}
+  #panel .tabs{display:flex;border-bottom:1px solid var(--line)}
+  #panel .tab{flex:1;text-align:center;font-size:13px;font-weight:600;padding:12px 0;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent}
+  #panel .tab.on{color:var(--blue);border-bottom-color:var(--blue)}
+  #panel .body{flex:1;overflow:auto;padding:14px}
+  label{font-size:12px;color:var(--sub);font-weight:600;display:block;margin:10px 0 6px}
+  textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:10px;min-height:120px;resize:vertical;background:#fcfcfd}
+  textarea:focus{outline:2px solid #d1e0ff;border-color:var(--blue)}
+  pre{font-size:11.5px;background:#0c111d;color:#d5d9eb;border-radius:8px;padding:10px;overflow:auto;white-space:pre-wrap;word-break:break-all;max-height:300px}
+  .nr{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-bottom:8px;cursor:pointer}
+  .nr:hover{background:#f9fafb}
+  .nr .l1{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600}
+  .nr .dot{width:8px;height:8px;border-radius:50%}
+  .nr .err{font-size:11.5px;color:var(--red);margin-top:5px;line-height:1.5}
+  .runline{display:flex;gap:8px;margin-top:12px}
+  .runline button{flex:1}
+  .hint{font-size:12px;color:var(--sub);line-height:1.7;margin-top:8px}
+  .result-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;margin:10px 0 4px}
+  .result-badge.ok{background:var(--green-bg);color:var(--green)}
+  .result-badge.fail{background:var(--red-bg);color:var(--red)}
+  dialog{border:none;border-radius:14px;padding:22px;width:560px;box-shadow:0 20px 60px rgba(16,24,40,.3)}
+  dialog::backdrop{background:rgba(16,24,40,.5)}
+  dialog h3{font-size:15px;margin-bottom:12px}
+  .empty{color:var(--sub);font-size:13px;text-align:center;margin-top:120px;line-height:2}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="mark">J</div>FlowBench <span class="tag">评价域工作流平台 · 本地演示</span></div>
+  <span id="appTitle"></span><span id="pubBadge"></span>
+  <div class="spacer"></div>
+  <button class="btn-sec" onclick="dlgImport.showModal()">导入定义</button>
+  <button class="btn-sec" id="btnPublish" onclick="publishApp()" style="display:none">发布</button>
+</header>
+<main>
+  <aside>
+    <h3>应用列表</h3>
+    <div id="appList"></div>
+  </aside>
+  <div id="canvasWrap">
+    <svg id="svg"></svg>
+    <div id="nodes"></div>
+    <div class="empty" id="emptyHint">左上角「导入定义」导入一个工作流<br>或从左侧选择应用</div>
+  </div>
+  <div id="panel">
+    <div class="tabs">
+      <div class="tab on" data-t="run" onclick="switchTab('run')">试运行</div>
+      <div class="tab" data-t="node" onclick="switchTab('node')">节点详情</div>
+    </div>
+    <div class="body" id="panelBody"></div>
+  </div>
+</main>
+
+<dialog id="dlgImport">
+  <h3>导入工作流定义（JSON）</h3>
+  <textarea id="importText" style="min-height:260px" placeholder='{"app":{"name":"..."},"graph":{"nodes":[...],"edges":[...]}}'></textarea>
+  <div class="runline">
+    <button class="btn-sec" onclick="dlgImport.close()">取消</button>
+    <button class="btn-pri" onclick="doImport()">导入</button>
+  </div>
+</dialog>
+
+<script>
+const ICONS = {
+  start:["▶","var(--green-bg)","var(--green)"], end:["⏹","var(--blue-bg)","var(--blue)"],
+  llm:["✨","var(--violet-bg)","var(--violet)"], knowledge_retrieval:["📚","var(--teal-bg)","var(--teal)"],
+  if_else:["⑂","var(--amber-bg)","var(--amber)"], question_classifier:["🏷","var(--amber-bg)","var(--amber)"],
+  code:["</>","#f2f4f7","#475467"], http_request:["🌐","var(--blue-bg)","var(--blue)"],
+  iteration:["↻","var(--teal-bg)","var(--teal)"], variable_aggregator:["⧉","#f2f4f7","#475467"],
+  parameter_extractor:["⚙","#f2f4f7","#475467"], template_transform:["¶","var(--violet-bg)","var(--violet)"],
+};
+const TYPE_NAME = {start:"开始",end:"结束",llm:"LLM",knowledge_retrieval:"知识检索",if_else:"条件分支",
+  question_classifier:"问题分类器",code:"代码执行",http_request:"HTTP 请求",iteration:"迭代",
+  variable_aggregator:"变量聚合",parameter_extractor:"参数提取",template_transform:"模板转换"};
+
+let apps=[], cur=null, curDef=null, lastRun=null, selNode=null, layout={};
+
+async function api(path,opt){const r=await fetch(path,opt);const j=await r.json();if(!r.ok)throw new Error(j.error||JSON.stringify(j.errors||j));return j}
+
+async function loadApps(){
+  apps=(await api('/apps')).apps;
+  const el=document.getElementById('appList');
+  el.innerHTML=apps.map(a=>`<div class="app-item ${cur&&cur.app_id===a.app_id?'active':''}" onclick="selectApp('${a.app_id}')">
+    <div class="nm">${esc(a.name)}</div><div class="mt">${a.node_count} 节点 · ${a.published?'已发布 v'+a.version:'草稿'}</div></div>`).join('')
+    ||'<div class="hint">暂无应用</div>';
+}
+async function selectApp(id){
+  cur=await api('/apps/'+id); curDef=cur.definition; lastRun=null; selNode=null;
+  document.getElementById('appTitle').textContent=cur.name;
+  document.getElementById('pubBadge').innerHTML=cur.published?'<span class="badge pub">已发布 v'+cur.version+'</span>':'<span class="badge draft">草稿</span>';
+  document.getElementById('btnPublish').style.display=cur.published?'none':'inline-block';
+  document.getElementById('emptyHint').style.display='none';
+  drawGraph(); switchTab('run'); loadApps();
+}
+async function publishApp(){await api('/apps/'+cur.app_id+'/publish',{method:'POST'});selectApp(cur.app_id)}
+async function doImport(){
+  try{
+    const defn=JSON.parse(document.getElementById('importText').value);
+    const r=await api('/apps/imports',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({definition:defn})});
+    dlgImport.close(); await loadApps(); selectApp(r.app_id);
+  }catch(e){alert('导入失败: '+e.message)}
+}
+
+/* ---------- 布局：BFS 分层 ---------- */
+function computeLayout(){
+  const nodes=curDef.graph.nodes, edges=curDef.graph.edges||[];
+  const depth={}, indeg={}, adj={};
+  nodes.forEach(n=>{indeg[n.id]=0;adj[n.id]=[]});
+  edges.forEach(e=>{adj[e.source].push(e.target);indeg[e.target]++});
+  const start=nodes.find(n=>n.type==='start');
+  const q=[[start.id,0]]; depth[start.id]=0;
+  while(q.length){const [id,d]=q.shift();(adj[id]||[]).forEach(t=>{if(depth[t]===undefined||depth[t]<d+1){depth[t]=d+1;q.push([t,d+1])}})}
+  nodes.forEach(n=>{if(depth[n.id]===undefined)depth[n.id]=1});
+  const cols={};nodes.forEach(n=>{(cols[depth[n.id]]=cols[depth[n.id]]||[]).push(n.id)});
+  layout={};
+  Object.keys(cols).forEach(d=>{cols[d].forEach((id,i)=>{layout[id]={x:40+d*280,y:60+i*150+(d%2?30:0)}})});
+}
+function drawGraph(){
+  computeLayout();
+  const nodesEl=document.getElementById('nodes'); nodesEl.innerHTML='';
+  const maxX=Math.max(...Object.values(layout).map(p=>p.x))+320;
+  const maxY=Math.max(...Object.values(layout).map(p=>p.y))+220;
+  const svg=document.getElementById('svg');
+  svg.setAttribute('width',maxX);svg.setAttribute('height',maxY);
+  svg.innerHTML='<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#98a2b3"/></marker></defs>';
+  const statusMap={}; if(lastRun) lastRun.node_runs.forEach(nr=>statusMap[nr.node_id]=nr);
+  (curDef.graph.edges||[]).forEach(e=>{
+    const s=layout[e.source],t=layout[e.target]; if(!s||!t)return;
+    const x1=s.x+220,y1=s.y+34,x2=t.x,y2=t.y+34,mx=(x1+x2)/2;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
+    p.setAttribute('fill','none');p.setAttribute('stroke','#98a2b3');p.setAttribute('stroke-width','1.6');p.setAttribute('marker-end','url(#arr)');
+    svg.appendChild(p);
+    if(e.source_handle!==undefined&&e.source_handle!==null){
+      const tx=document.createElementNS('http://www.w3.org/2000/svg','text');
+      tx.setAttribute('x',(x1+x2)/2);tx.setAttribute('y',(y1+y2)/2-6);tx.setAttribute('text-anchor','middle');
+      tx.setAttribute('font-size','10.5');tx.setAttribute('fill','#155eef');tx.setAttribute('font-weight','600');
+      tx.textContent=String(e.source_handle);svg.appendChild(tx);
+    }
+  });
+  curDef.graph.nodes.forEach(n=>{
+    const p=layout[n.id],[ic,bg,fg]=ICONS[n.type]||["?","#eee","#333"];
+    const nr=statusMap[n.id];
+    const st=nr?(nr.status==='succeeded'?'<span class="st" style="color:var(--green)">✓</span>':nr.status==='failed'?'<span class="st" style="color:var(--red)">✕</span>':''):'';
+    const d=document.createElement('div');
+    d.className='node'+(nr?(nr.status==='succeeded'?' ok':nr.status==='failed'?' fail':''):'')+(selNode===n.id?' sel':'');
+    d.style.left=p.x+'px';d.style.top=p.y+'px';
+    d.innerHTML=`<div class="hd"><div class="ic" style="background:${bg};color:${fg}">${ic}</div>
+      <div class="ti">${esc(n.title||n.id)}</div>${st}</div>
+      <div class="tp">${TYPE_NAME[n.type]||n.type}</div>${nr&&nr.elapsed_ms!=null?`<div class="ms">${nr.elapsed_ms}ms</div>`:''}`;
+    d.onclick=()=>{selNode=n.id;drawGraph();showNode(n.id)};
+    nodesEl.appendChild(d);
+  });
+}
+
+/* ---------- 面板 ---------- */
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('on',el.dataset.t===t));
+  const b=document.getElementById('panelBody');
+  if(t==='run')renderRunTab(b); else renderNodeTab(b);
+}
+function renderRunTab(b){
+  if(!cur){b.innerHTML='<div class="hint">先选择一个应用</div>';return}
+  const vars=(curDef.variables||[]).reduce((o,v)=>(o[v.name]=v.example!==undefined?v.example:"",o),{});
+  b.innerHTML=`<label>输入变量（JSON）</label>
+    <textarea id="runInputs">${esc(JSON.stringify(vars,null,2))}</textarea>
+    <div class="runline"><button class="btn-pri" onclick="doRun()">▶ 运行</button></div>
+    <div id="runResult"></div>`;
+  if(lastRun)renderRunResult();
+}
+async function doRun(){
+  let inputs;
+  try{inputs=JSON.parse(document.getElementById('runInputs').value)}catch(e){alert('输入不是合法 JSON');return}
+  document.getElementById('runResult').innerHTML='<div class="hint">运行中…</div>';
+  try{
+    const r=await api('/workflows/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:cur.app_id,inputs})});
+    lastRun=await api('/workflows/run/'+r.run_id);
+  }catch(e){document.getElementById('runResult').innerHTML=`<div class="result-badge fail">✕ ${esc(e.message)}</div>`;return}
+  drawGraph(); renderRunResult();
+}
+function renderRunResult(){
+  const el=document.getElementById('runResult'); if(!el||!lastRun)return;
+  const ok=lastRun.status==='succeeded';
+  el.innerHTML=`<div class="result-badge ${ok?'ok':'fail'}">${ok?'✓ 运行成功':'✕ 运行失败'} · ${lastRun.elapsed_ms}ms · run_id ${lastRun.run_id}</div>`
+    +(lastRun.error?`<div class="nr"><div class="err">${esc(lastRun.error)}</div></div>`:'')
+    +(ok?`<label>最终输出</label><pre>${esc(JSON.stringify(lastRun.outputs,null,2))}</pre>`:'')
+    +`<label>节点执行流水（点击看输入输出）</label>`
+    +lastRun.node_runs.map(nr=>`<div class="nr" onclick="selNode='${nr.node_id}';drawGraph();switchTab('node')">
+        <div class="l1"><span class="dot" style="background:${nr.status==='succeeded'?'var(--green)':'var(--red)'}"></span>
+        ${esc(nr.title)} <span style="color:var(--sub);font-weight:400;font-size:11px">${nr.elapsed_ms}ms</span></div>
+        ${nr.error?`<div class="err">${esc(nr.error)}</div>`:''}</div>`).join('');
+}
+function showNode(id){switchTab('node')}
+function renderNodeTab(b){
+  if(!selNode){b.innerHTML='<div class="hint">点击画布上的节点查看配置与运行详情</div>';return}
+  const n=curDef.graph.nodes.find(x=>x.id===selNode);
+  const nr=lastRun&&lastRun.node_runs.find(x=>x.node_id===selNode);
+  b.innerHTML=`<label>节点</label><div style="font-size:14px;font-weight:700">${esc(n.title||n.id)}
+      <span style="font-size:11px;color:var(--sub);font-weight:400">（${TYPE_NAME[n.type]||n.type} · ${n.id}）</span></div>
+    <label>配置</label><pre>${esc(JSON.stringify(n.config||{},null,2))}</pre>
+    ${nr?`<label>本次运行 · ${nr.status==='succeeded'?'✓ 成功':'✕ 失败'} · ${nr.elapsed_ms}ms</label>
+      ${nr.error?`<div class="nr"><div class="err">${esc(nr.error)}</div></div>`:''}
+      <pre>${esc(JSON.stringify(nr.output,null,2))}</pre>`:'<div class="hint">尚未运行</div>'}`;
+}
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+loadApps(); switchTab('run');
+</script>
+</body>
+</html>

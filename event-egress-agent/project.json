@@ -1,0 +1,58 @@
+{
+  "project_id": "personal-event-egress-simulation",
+  "title": "大型活动推演 Agent",
+  "product_line": "个人活动预演台 · 固定回归 + 真实 API",
+  "port": 8927,
+  "theme": "map",
+  "user_moment": "自己策划一场活动时 · 方案确认前",
+  "mission_title": "先把场馆讲清楚，再让事件进入推演",
+  "mission_copy": "你可以自由描述降雨、出口关闭、接驳变化等情况。AI 只整理为待确认变化；本地规则和确定性引擎完成 A/B/C 与 12 轮比较。",
+  "skill": {"name": "simulate-event-egress-plan", "version": "egress-policy@1.0.0"},
+  "fixed_case": {
+    "case_id": "concert-egress-001",
+    "title": "星港体育中心 12,000 人散场",
+    "summary": "2 分钟一轮，共 12 轮。第 3 轮起强降雨使北门容量降至 55%；第 4—6 轮东门地铁接驳暂停，第 7 轮恢复。",
+    "outcomes": [
+      {"id": "baseline", "label": "方案 A · 就近不重算", "role": "baseline", "short": "事件发生后仍沿用原分配", "decision": "REPLAN_REQUIRED", "summary": "东门关闭窗口内仍有客群向东门释放，队列和完成时间失控。", "metrics": {"audience_count": 12000, "completed_people": 10280, "remaining_people": 1720, "clearance_minutes": 24, "clearance_rate": 0.8567, "max_queue_density_ratio": 2.767, "overflow_ticks": 9, "local_replans": 0}, "findings": ["第 4—6 轮没有响应东门关闭", "北门雨天容量下降后仍被高估"]},
+      {"id": "overcorrected", "label": "过度修正 · 全部压向南门", "role": "over", "short": "躲开东门，却制造新拥堵", "decision": "REPLAN_REQUIRED", "summary": "所有客群被改到南门，安全队列上限被突破。", "metrics": {"audience_count": 12000, "completed_people": 8640, "remaining_people": 3360, "clearance_minutes": 24, "clearance_rate": 0.72, "max_queue_density_ratio": 3.762, "overflow_ticks": 11, "local_replans": 0}, "findings": ["局部事件被扩大成全局改向", "南门成为新的单点压力"]},
+      {"id": "target", "label": "方案 B · 容量感知", "role": "target", "short": "只重规划受影响客群", "decision": "PENDING_HUMAN_CONFIRMATION", "summary": "在东门关闭窗口局部改向，恢复后继续使用；其余客群不被全局重排。", "metrics": {"audience_count": 12000, "completed_people": 12000, "remaining_people": 0, "clearance_minutes": 16, "clearance_rate": 1.0, "max_queue_density_ratio": 0.476, "overflow_ticks": 0, "local_replans": 1}, "findings": ["12,000 人在仿真窗口内完成", "没有队列溢出", "只发生局部重规划", "结果仍需人工确认"]}
+    ]
+  },
+  "agents": [
+    {"name": "变化理解 Agent", "task": "把自然语言整理为待确认变化和局部意图", "input": "场馆档案、出口 ID、事件描述", "output": "变化草案 + 客群意图", "stop": "信息不足或引用了不存在的出口"},
+    {"name": "客群 Agent", "task": "每轮只提交本客群的释放与出口意图", "input": "剩余人数、偏好、当前事件", "output": "只读 GroupIntent", "stop": "不直接修改出口容量和队列"},
+    {"name": "World Simulator", "task": "单写者结算容量、队列、通过量与局部重规划", "input": "所有客群意图与已校验变化", "output": "A/B/C 的 12 轮轨迹", "stop": "达到 12 轮或输入校验失败"},
+    {"name": "证据 Agent", "task": "比较三个候选并整理可复核证据", "input": "仿真轨迹与 Skill 门禁", "output": "指标、差异点与证据摘要", "stop": "不执行真实封路、调度或公众导航"}
+  ],
+  "visual": {
+    "type": "venue",
+    "center": "12,000 人",
+    "exits": [
+      {"id": "E1", "name": "东门·地铁接驳", "direction": "east", "capacity": 820},
+      {"id": "E2", "name": "南门·公交接驳", "direction": "south", "capacity": 720},
+      {"id": "E3", "name": "西门·停车区", "direction": "west", "capacity": 640},
+      {"id": "E4", "name": "北门·步行疏散", "direction": "north", "capacity": 520}
+    ]
+  },
+  "live": {
+    "title": "用你的场馆和自然语言事件重跑推演",
+    "description": "先配置 2—8 个出口，再像和人沟通一样描述现场变化。AI 只产生草案；草案通过本地规则后，才会进入确定性仿真。",
+    "schema_name": "personal_egress_change_draft",
+    "allow_web_search": false,
+    "default_venue": {
+      "name": "滨江艺术中心",
+      "audience_count": 6800,
+      "zone_notes": "东区观众离地铁口更近；南区有较多家庭观众；西区靠近停车场。",
+      "exits": [
+        {"id": "E1", "name": "东门地铁口", "direction": "east", "capacity_per_tick": 560},
+        {"id": "E2", "name": "南门主出口", "direction": "south", "capacity_per_tick": 720},
+        {"id": "E3", "name": "西门停车场", "direction": "west", "capacity_per_tick": 460},
+        {"id": "E4", "name": "北门沿江步道", "direction": "north", "capacity_per_tick": 380}
+      ]
+    },
+    "default_event": "散场开始 6 分钟后突然下大雨，北门沿江步道通行能力大约只剩一半。同时，东门地铁口在第 5 到第 7 轮临时暂停进入，恢复后可正常使用。希望只调整受影响的人群，不要把所有人都赶到同一个出口。",
+    "system_prompt": "你是个人活动预演台的变化理解 Agent。用户输入会包含一份场馆档案和一段自然语言事件。你只能把事件整理成待确认变化 changes，并给出只读的局部客群意图 local_intents；不计算队列、不选定最终方案、不执行真实调度。target_exit 和 changes.target 必须使用场馆档案中真实存在的出口 ID；local_intents.group_id 必须使用场馆档案 groups 列表中的客群 ID。kind 只能是 RAIN、EXIT_CLOSED、CAPACITY_CHANGE、TRANSIT_CLOSED；start_step 和 end_step 使用 1—12 轮；value 是 0—1 的容量乘数，关闭类必须为 0。如果输入明确表示没有突发事件，可返回空 changes 并标记 READY；如果缺少必要的对象、轮次或变化幅度，标记 NEEDS_CLARIFICATION，不得猜测。handoff_boundary 必须明确这是仿真草案，不是现实安全承诺。"
+  },
+  "human_gate": {"copy": "你确认变化草案与仿真候选后，系统只生成本地确认记录；这不是现实调度指令。", "after_confirmation": "生成本地候选记录；真实封路、运力和公众引导仍需另行授权"},
+  "boundaries": {"stop_at": "场馆档案、AI 变化草案、确定性仿真与本地确认；不接现实轨迹，不输出现实安全承诺，不控制道路、地铁、闸机或公众导航。", "external_message": "本 Demo 没有现实交通与场馆控制权限，不能执行真实封路、调度或公众引导。"}
+}

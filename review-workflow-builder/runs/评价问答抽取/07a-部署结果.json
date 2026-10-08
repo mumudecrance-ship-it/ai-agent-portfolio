@@ -1,0 +1,12 @@
+{
+  "base": "http://127.0.0.1:8787",
+  "import": {
+    "imported": true,
+    "app_id": "01e1c964",
+    "name": "评价问答抽取"
+  },
+  "publish": {
+    "published": true,
+    "version": 1
+  }
+}

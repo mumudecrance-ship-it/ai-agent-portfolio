@@ -1,0 +1,325 @@
+{
+  "_说明": "内置演示模式的确定性输出规则。按节点标题(title_contains)或prompt片段(prompt_contains)匹配，命中即返回 output。规则从上到下取第一条命中。",
+  "rules": [
+    {
+      "title_contains": "问答对抽取",
+      "prompt_contains": "睡眠",
+      "output": {
+        "has_qa": 1,
+        "question": "晚上开睡眠档吵不吵？",
+        "answer_quote": "晚上开睡眠档基本听不到声音，只有凑近才有轻微嗡嗡声",
+        "confidence": 0.93
+      }
+    },
+    {
+      "title_contains": "问答对抽取",
+      "output": {
+        "has_qa": 0,
+        "question": null,
+        "answer_quote": null,
+        "confidence": 0.9
+      }
+    },
+    {
+      "title_contains": "证言价值",
+      "prompt_contains": "浮毛",
+      "output": {
+        "value": 1,
+        "reason": "具体使用场景与可验证效果，证言价值高",
+        "confidence": 0.94
+      }
+    },
+    {
+      "title_contains": "证言价值",
+      "prompt_contains": "半马",
+      "output": {
+        "value": 1,
+        "reason": "多次长距离使用体验，证言可信",
+        "confidence": 0.92
+      }
+    },
+    {
+      "title_contains": "证言价值",
+      "output": {
+        "value": 0,
+        "reason": "泛评或无使用体验",
+        "confidence": 0.9
+      }
+    },
+    {
+      "title_contains": "类型细分",
+      "prompt_contains": "某宝",
+      "output": {
+        "type": "广告引流",
+        "confidence": 0.95
+      }
+    },
+    {
+      "title_contains": "类型细分",
+      "prompt_contains": "拖拉机",
+      "output": {
+        "type": "极端情绪",
+        "confidence": 0.82
+      }
+    },
+    {
+      "title_contains": "类型细分",
+      "prompt_contains": "值得购买",
+      "output": {
+        "type": "水字数",
+        "confidence": 0.78
+      }
+    },
+    {
+      "title_contains": "类型细分",
+      "output": {
+        "type": "跑题",
+        "confidence": 0.6
+      }
+    },
+    {
+      "title_contains": "关键点提取",
+      "prompt_contains": "睡眠",
+      "output": {
+        "has_point": 1,
+        "point": "夜间睡眠档噪音表现",
+        "type": "噪音功耗",
+        "confidence": 0.93
+      }
+    },
+    {
+      "title_contains": "关键点提取",
+      "prompt_contains": "半马",
+      "output": {
+        "has_point": 1,
+        "point": "长距离跑中底回弹表现",
+        "type": "耐用性",
+        "confidence": 0.9
+      }
+    },
+    {
+      "title_contains": "关键点提取",
+      "output": {
+        "has_point": 0,
+        "point": null,
+        "type": null,
+        "confidence": 0.85
+      }
+    },
+    {
+      "title_contains": "低质量判定",
+      "prompt_contains": "拖拉机",
+      "output": {
+        "verdict": 1,
+        "reason": "反讽表述：以夸赞句式表达噪音差评（阴阳怪气）",
+        "quality": "低质量"
+      }
+    },
+    {
+      "title_contains": "低质量判定",
+      "prompt_contains": "某宝",
+      "output": {
+        "verdict": 1,
+        "reason": "站外引流：诱导用户去其他平台交易",
+        "quality": "低质量"
+      }
+    },
+    {
+      "title_contains": "低质量判定",
+      "prompt_contains": "值得购买",
+      "output": {
+        "verdict": 1,
+        "reason": "疑似套模板：通用赞美句式，与商品特征无关联",
+        "quality": "低质量"
+      }
+    },
+    {
+      "title_contains": "低质量判定",
+      "output": {
+        "verdict": 0,
+        "reason": "描述具体使用体验，与商品强相关",
+        "quality": "非低质量"
+      }
+    },
+    {
+      "title_contains": "套模板",
+      "prompt_contains": "值得购买",
+      "output": {
+        "is_template": 1,
+        "template_text": "宝贝收到了，质量很好，卖家服务态度好，物流很快，包装严实，值得购买"
+      }
+    },
+    {
+      "title_contains": "套模板",
+      "output": {
+        "is_template": 0,
+        "template_text": null
+      }
+    },
+    {
+      "title_contains": "价值描述精准度",
+      "prompt_contains": "睡眠",
+      "output": {
+        "accurate": 1,
+        "matched_points": [
+          "夜间睡眠模式 < 28dB"
+        ]
+      }
+    },
+    {
+      "title_contains": "价值描述精准度",
+      "output": {
+        "accurate": 0,
+        "matched_points": []
+      }
+    },
+    {
+      "title_contains": "使用后评价",
+      "prompt_contains": "开一晚上",
+      "output": {
+        "after_use": 1,
+        "evidence": "描述了整夜使用后的效果变化"
+      }
+    },
+    {
+      "title_contains": "使用后评价",
+      "prompt_contains": "半马",
+      "output": {
+        "after_use": 1,
+        "evidence": "描述了多次长距离使用后的体验"
+      }
+    },
+    {
+      "title_contains": "使用后评价",
+      "output": {
+        "after_use": 0,
+        "evidence": null
+      }
+    },
+    {
+      "title_contains": "卖点提取",
+      "output": {
+        "sellpoints": [
+          "HEPA 13 级滤芯",
+          "夜间睡眠模式 < 28dB",
+          "适合 30 平米左右卧室",
+          "智能联动手机 App",
+          "全网热销爆款"
+        ]
+      }
+    },
+    {
+      "title_contains": "素材筛选",
+      "prompt_contains": "爆款",
+      "output": {
+        "verdict": "unsuitable",
+        "excluded_category": "6",
+        "suitable_dimension": null,
+        "reason": "主观广告语，无具体事实",
+        "confidence": 0.94
+      }
+    },
+    {
+      "title_contains": "素材筛选",
+      "prompt_contains": "28dB",
+      "output": {
+        "verdict": "suitable",
+        "excluded_category": null,
+        "suitable_dimension": "A",
+        "reason": "噪音体验维度，可问可答",
+        "confidence": 0.95
+      }
+    },
+    {
+      "title_contains": "素材筛选",
+      "prompt_contains": "HEPA",
+      "output": {
+        "verdict": "suitable",
+        "excluded_category": null,
+        "suitable_dimension": "D",
+        "reason": "规格可转体验问句",
+        "confidence": 0.88
+      }
+    },
+    {
+      "title_contains": "素材筛选",
+      "output": {
+        "verdict": "suitable",
+        "excluded_category": null,
+        "suitable_dimension": "B",
+        "reason": "含明确场景，可问可答",
+        "confidence": 0.86
+      }
+    },
+    {
+      "title_contains": "问句改写",
+      "prompt_contains": "28dB",
+      "output": {
+        "question": "晚上开整夜会被噪音吵到吗？",
+        "self_check": {
+          "neutral": true,
+          "concrete": true,
+          "answerable": true,
+          "length_ok": true,
+          "ends_with_question_mark": true,
+          "no_redline": true
+        }
+      }
+    },
+    {
+      "title_contains": "问句改写",
+      "prompt_contains": "HEPA",
+      "output": {
+        "question": "开几小时后房间空气清不清新？",
+        "self_check": {
+          "neutral": true,
+          "concrete": true,
+          "answerable": true,
+          "length_ok": true,
+          "ends_with_question_mark": true,
+          "no_redline": true
+        }
+      }
+    },
+    {
+      "title_contains": "问句改写",
+      "output": {
+        "question": "30 平米卧室开整夜效果明显吗？",
+        "self_check": {
+          "neutral": true,
+          "concrete": true,
+          "answerable": true,
+          "length_ok": true,
+          "ends_with_question_mark": true,
+          "no_redline": true
+        }
+      }
+    },
+    {
+      "title_contains": "追加评价引导",
+      "prompt_contains": "净化器",
+      "output": {
+        "guide_text": "用了一段时间了，滤芯的净化效果和刚开箱时比有变化吗？欢迎追加评价说说长期体验。",
+        "angle": "长期效果衰减"
+      }
+    },
+    {
+      "title_contains": "追加评价引导",
+      "output": {
+        "guide_text": "使用一个月后，最初在意的那个问题现在怎么样了？欢迎追加评价补充。",
+        "angle": "长期使用验证"
+      }
+    },
+    {
+      "title_contains": "总结",
+      "prompt_contains": "睡眠",
+      "output": {
+        "summary": "购买用户中多数认可夜间噪音控制，典型反馈为睡眠档整夜运行不影响入睡。",
+        "cited_reviews": [
+          "r001",
+          "r007"
+        ]
+      }
+    }
+  ]
+}

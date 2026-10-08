@@ -1,0 +1,22 @@
+{
+  "cases": [
+    {"name": "个性化链路（含关键点的首评）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "开放式厨房做饭油烟味半小时就散了，晚上开睡眠档基本听不到声音，只有凑近才有轻微嗡嗡声。App 远程开机很方便。",
+       "star": 5, "has_followup": "no", "inject": ""},
+     "expect": {"outputs.need_review": "true", "outputs.entry.angle": "长期效果衰减"}},
+    {"name": "通用模板链路（低信息量首评）",
+     "inputs": {"product_id": "100086651001", "review_text": "挺好的。",
+       "star": 5, "has_followup": "no", "inject": ""},
+     "expect": {"outputs.need_review": "true", "outputs.entry.angle": "通用长期体验"}},
+    {"name": "不打扰链路（差评未解决）",
+     "inputs": {"product_id": "100086651001", "review_text": "噪音太大了，找客服还没解决，很失望。",
+       "star": 1, "has_followup": "no", "inject": ""},
+     "expect": {"outputs.need_review": "false", "outputs.skip_reason": "已追加评价或差评未解决，不进引导"}},
+    {"name": "错误注入（敏感词接口500，验证节点级报错定位）",
+     "inputs": {"product_id": "100086651001",
+       "review_text": "开放式厨房做饭油烟味半小时就散了，晚上开睡眠档基本听不到声音，只有凑近才有轻微嗡嗡声。App 远程开机很方便。",
+       "star": 5, "has_followup": "no", "inject": "500"},
+     "expect_fail": true}
+  ]
+}

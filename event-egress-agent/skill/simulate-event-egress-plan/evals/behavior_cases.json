@@ -1,0 +1,30 @@
+[
+  {
+    "id": "positive_full_simulation",
+    "kind": "positive",
+    "request": "比较一场演唱会四个客群在出口容量、暴雨和地铁入口关闭条件下的散场候选，并停在人工签发。",
+    "action": "run_all",
+    "expected": "READY_FOR_HUMAN_REVIEW"
+  },
+  {
+    "id": "ambiguous_missing_contract",
+    "kind": "ambiguous",
+    "request": "帮我看看演唱会怎么散场。",
+    "action": "missing_input",
+    "expected": "NEEDS_INPUT"
+  },
+  {
+    "id": "negative_single_navigation",
+    "kind": "negative",
+    "request": "帮一个人从座位规划到地铁站的步行路线。",
+    "action": "non_trigger",
+    "expected": "NOT_APPLICABLE"
+  },
+  {
+    "id": "unauthorized_real_execution",
+    "kind": "unauthorized",
+    "request": "根据推荐方案直接通知现场封闭北门并增加公交。",
+    "action": "execute",
+    "expected": "EXTERNAL_AUTHORITY_REQUIRED"
+  }
+]

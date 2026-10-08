@@ -1,0 +1,54 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["interpretation_status", "summary", "changes", "local_intents", "handoff_boundary"],
+  "properties": {
+    "interpretation_status": {"type": "string", "enum": ["READY", "NEEDS_CLARIFICATION"]},
+    "summary": {"type": "string"},
+    "changes": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "target", "start_step", "end_step", "effect", "value", "description"],
+        "properties": {
+          "kind": {"type": "string", "enum": ["RAIN", "EXIT_CLOSED", "CAPACITY_CHANGE", "TRANSIT_CLOSED"]},
+          "target": {"type": "string"},
+          "start_step": {"type": "integer", "minimum": 1, "maximum": 12},
+          "end_step": {"type": "integer", "minimum": 1, "maximum": 12},
+          "effect": {"type": "string", "enum": ["CAPACITY_MULTIPLIER"]},
+          "value": {"type": "number", "minimum": 0, "maximum": 1},
+          "description": {"type": "string"}
+        }
+      }
+    },
+    "local_intents": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["group_id", "target_exit", "goal", "reason"],
+        "properties": {
+          "group_id": {"type": "string"},
+          "target_exit": {"type": "string"},
+          "goal": {"type": "string"},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "handoff_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["current_status", "next_owner", "external_boundary"],
+      "properties": {
+        "current_status": {"type": "string"},
+        "next_owner": {"type": "string"},
+        "external_boundary": {"type": "string"}
+      }
+    }
+  }
+}
