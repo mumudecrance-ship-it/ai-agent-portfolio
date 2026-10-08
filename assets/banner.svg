@@ -1,37 +1,63 @@
 <svg width="1200" height="280" viewBox="0 0 1200 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Agent 作品集 — 两个用工程手段驯化 AI 的项目">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#6d28d9"/>
-      <stop offset="50%" stop-color="#2563eb"/>
-      <stop offset="100%" stop-color="#06b6d4"/>
+    <linearGradient id="base" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="55%" stop-color="#0d1b2a"/>
+      <stop offset="100%" stop-color="#12081f"/>
     </linearGradient>
-    <linearGradient id="title" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#e0f2fe"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+
+    <radialGradient id="aurora1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.55"/>
+      <stop offset="60%" stop-color="#34d399" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="aurora2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.50"/>
+      <stop offset="60%" stop-color="#3b82f6" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="aurora3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.50"/>
+      <stop offset="60%" stop-color="#8b5cf6" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="aurora4" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.42"/>
+      <stop offset="60%" stop-color="#ec4899" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="35%" stop-color="#60a5fa"/>
+      <stop offset="70%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
   </defs>
 
-  <rect width="1200" height="280" fill="url(#bg)"/>
+  <rect width="1200" height="280" fill="url(#base)"/>
 
-  <ellipse cx="600" cy="140" rx="620" ry="200" fill="url(#glow)"/>
+  <ellipse cx="230" cy="70" rx="360" ry="220" fill="url(#aurora1)"/>
+  <ellipse cx="620" cy="250" rx="420" ry="240" fill="url(#aurora2)"/>
+  <ellipse cx="900" cy="40" rx="340" ry="210" fill="url(#aurora3)"/>
+  <ellipse cx="1100" cy="250" rx="300" ry="200" fill="url(#aurora4)"/>
 
-  <circle cx="110" cy="60" r="46" fill="#ffffff" opacity="0.10"/>
-  <circle cx="1090" cy="52" r="70" fill="#ffffff" opacity="0.08"/>
-  <circle cx="1120" cy="230" r="54" fill="#ffffff" opacity="0.12"/>
-  <circle cx="70" cy="230" r="26" fill="#ffffff" opacity="0.14"/>
-  <circle cx="330" cy="38" r="10" fill="#ffffff" opacity="0.20"/>
-  <circle cx="760" cy="46" r="14" fill="#ffffff" opacity="0.18"/>
-  <circle cx="540" cy="232" r="12" fill="#ffffff" opacity="0.16"/>
-  <circle cx="900" cy="220" r="8" fill="#ffffff" opacity="0.22"/>
+  <rect width="1200" height="280" fill="url(#grid)"/>
 
-  <line x1="180" y1="120" x2="420" y2="120" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2" stroke-linecap="round"/>
-  <line x1="780" y1="170" x2="1020" y2="170" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2" stroke-linecap="round"/>
+  <g stroke="#ffffff" stroke-linecap="round">
+    <circle cx="150" cy="60" r="4" stroke-opacity="0.35" fill="none" stroke-width="1.5"/>
+    <circle cx="1050" cy="70" r="6" stroke-opacity="0.30" fill="none" stroke-width="1.5"/>
+    <circle cx="180" cy="230" r="3" stroke-opacity="0.30" fill="none" stroke-width="1.5"/>
+    <circle cx="980" cy="222" r="4" stroke-opacity="0.28" fill="none" stroke-width="1.5"/>
+    <line x1="430" y1="52" x2="470" y2="52" stroke-opacity="0.28" stroke-width="1.5"/>
+    <line x1="720" y1="230" x2="770" y2="230" stroke-opacity="0.28" stroke-width="1.5"/>
+  </g>
 
-  <text x="600" y="128" text-anchor="middle" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="64" font-weight="700" fill="url(#title)" letter-spacing="4">AI Agent 作品集</text>
+  <text x="600" y="126" text-anchor="middle" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="62" font-weight="700" fill="url(#titleGrad)" letter-spacing="6">AI Agent 作品集</text>
 
-  <text x="600" y="196" text-anchor="middle" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="26" font-weight="400" fill="#ffffff" fill-opacity="0.88" letter-spacing="2">两个用工程手段驯化 AI 的项目</text>
+  <text x="600" y="188" text-anchor="middle" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="24" font-weight="400" fill="#cbd5e1" letter-spacing="3">两个用工程手段驯化 AI 的项目</text>
 </svg>
