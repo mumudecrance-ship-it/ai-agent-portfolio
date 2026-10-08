@@ -93,28 +93,87 @@
 
 ---
 
-## 架构速览
+## 架构总览
 
-**项目一**把一条生产任务固化成可校验的流水线：
+### 项目一 · 四层约束 × 七步流水线
+
+项目一没有「一步到位」的 Prompt，而是一条**层层收口的生产线**：信息层喂料、七步流水线推进、门禁把关、台账留痕、平台闭环验证。
 
 ```mermaid
-flowchart LR
-    A[业务诉求] --> B[S1–S7 七步生产]
-    B --> C{脚本门禁}
-    C -->|不过| B
-    C -->|通过| D[FlowBench 跑通]
-    D --> E[台账留痕 · 可审计]
+flowchart TB
+    subgraph L1["L1 · 信息层"]
+        direction LR
+        LIB[两层节点库<br/>通用 11 类 + 评价域节点]
+        RULE[方法论规则集<br/>五条设计原则]
+    end
+
+    subgraph FLOW["S1–S7 七步生产流水线"]
+        direction LR
+        S1[业务澄清] --> S2[依赖分析] --> S3[流程拆解] --> S4[节点映射] --> S5[Prompt 起草] --> S6[方法论审查] --> S7[落地跑通]
+    end
+
+    subgraph L2["L2 · 流程层"]
+        GATE[脚本门禁<br/>每步产物结构校验 · 不过就停]
+    end
+
+    subgraph L3["L3 · 状态层"]
+        LEDGER[生产台账 ledger.json<br/>断点续跑 · 防覆盖 · 事件可审计]
+    end
+
+    subgraph L4["L4 · 验证层"]
+        VERIFY[平台闭环<br/>盲测命中 94% · 想象节点 0]
+    end
+
+    LIB --> FLOW
+    RULE --> FLOW
+    FLOW -.每步产物落文件.-> GATE
+    GATE --> LEDGER
+    LEDGER --> VERIFY
 ```
 
-**项目二**让四个客群 Agent 并行表达意图、由确定性引擎统一结算：
+### 项目二 · 多 Agent 协作 × 确定性引擎
+
+项目二把「模型负责理解建议、脚本负责计算、人负责签发」切成清晰边界：五类合同先定死规则，四个客群 Agent 并行表达意图，由确定性引擎单写者结算，最终具名人工签发。
 
 ```mermaid
-flowchart LR
-    A[变化理解 Agent] --> B[方案规划 A/B/C]
-    B --> C[客群 Agent ×4]
-    C --> D[确定性仿真引擎]
-    D --> E[门禁复核]
-    E --> F[具名人工签发]
+flowchart TB
+    subgraph CONTRACT["五类合同 · 进入 Coding 前定死规则"]
+        direction LR
+        WC[世界合同]
+        PC[方案合同]
+        EC[事件合同]
+        IC[意图合同]
+        RC[证据合同]
+    end
+
+    A[变化理解 Agent<br/>自然语言 → 变化草案] --> B[方案规划<br/>A / B / C 候选]
+
+    B --> C1[客群 Agent 1]
+    B --> C2[客群 Agent 2]
+    B --> C3[客群 Agent 3]
+    B --> C4[客群 Agent 4]
+
+    subgraph ENGINE["确定性仿真引擎"]
+        D[World Simulator<br/>单写者结算 · 同一输入同一结果]
+    end
+
+    C1 --> D
+    C2 --> D
+    C3 --> D
+    C4 --> D
+
+    D --> E[局部重规划<br/>仅调整受影响客群]
+    E --> F[证据判断 · 门禁复核]
+    F --> G[具名人工签发<br/>姓名 + 处理说明]
+
+    CONTRACT -.约束.-> A
+    CONTRACT -.约束.-> D
+
+    subgraph GUARD["权限边界"]
+        X[封路 / 运力调度 / 地图写回<br/>一律 403 拒绝]
+    end
+
+    G -.现实动作.-> GUARD
 ```
 
 ---
