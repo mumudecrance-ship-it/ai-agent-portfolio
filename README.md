@@ -11,7 +11,7 @@
   &nbsp;
   <span style="background-color:#0ea5e9; color:#ffffff; border-radius:20px; padding:5px 14px; font-size:12px; font-weight:600;">⚡ 零第三方依赖</span>
   &nbsp;
-  <span style="background-color:#f59e0b; color:#ffffff; border-radius:20px; padding:5px 14px; font-size:12px; font-weight:600;">🛡️ 全脱敏演示数据</span>
+  <span style="background-color:#f59e0b; color:#ffffff; border-radius:20px; padding:5px 14px; font-size:12px; font-weight:600;">🛡️ 演示用 mock 数据</span>
 </p>
 
 ---
