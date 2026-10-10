@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/banner.svg" alt="AI Agent 作品集" width="100%" />
+  <img src="assets/banner.png" alt="AI Agent 作品集" width="100%" />
 </div>
 
 <p align="center">

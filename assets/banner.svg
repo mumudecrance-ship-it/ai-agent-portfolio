@@ -1,83 +1,190 @@
-<svg width="1200" height="400" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Agent 作品集 — 用工程手段驯化 AI，把黑盒变成可复现的生产线">
+<svg width="1920" height="640" viewBox="0 0 1920 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Agent 作品集 — 用工程手段驯化 AI，把黑盒变成可复现的生产线">
+
   <defs>
-    <linearGradient id="base" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0b1020"/>
-      <stop offset="55%" stop-color="#0d1b2a"/>
-      <stop offset="100%" stop-color="#12081f"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1920" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0a1120"/>
+      <stop offset="0.55" stop-color="#0c1322"/>
+      <stop offset="1" stop-color="#080c17"/>
     </linearGradient>
 
-    <radialGradient id="aurora1" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#34d399" stop-opacity="0.55"/>
-      <stop offset="60%" stop-color="#34d399" stop-opacity="0.12"/>
-      <stop offset="100%" stop-color="#34d399" stop-opacity="0"/>
+    <radialGradient id="washBlue" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#5b8def" stop-opacity="0.14"/>
+      <stop offset="0.6" stop-color="#5b8def" stop-opacity="0.04"/>
+      <stop offset="1" stop-color="#5b8def" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="aurora2" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.50"/>
-      <stop offset="60%" stop-color="#3b82f6" stop-opacity="0.12"/>
-      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="aurora3" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.50"/>
-      <stop offset="60%" stop-color="#8b5cf6" stop-opacity="0.12"/>
-      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="aurora4" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.42"/>
-      <stop offset="60%" stop-color="#ec4899" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
+    <radialGradient id="washTeal" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#2fd3c0" stop-opacity="0.13"/>
+      <stop offset="0.6" stop-color="#2fd3c0" stop-opacity="0.035"/>
+      <stop offset="1" stop-color="#2fd3c0" stop-opacity="0"/>
     </radialGradient>
 
-    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#5eead4"/>
-      <stop offset="35%" stop-color="#60a5fa"/>
-      <stop offset="70%" stop-color="#a78bfa"/>
-      <stop offset="100%" stop-color="#f472b6"/>
+    <linearGradient id="pipeLine" x1="1020" y1="0" x2="1780" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5b8def" stop-opacity="0.20"/>
+      <stop offset="0.75" stop-color="#5b8def" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#8fb4f5" stop-opacity="0.85"/>
     </linearGradient>
 
-    <linearGradient id="divider" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#34d399" stop-opacity="0"/>
-      <stop offset="50%" stop-color="#60a5fa" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#f472b6" stop-opacity="0"/>
+    <linearGradient id="gridFade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0.36" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="1"/>
     </linearGradient>
 
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M 64 0 L 0 0 0 64" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
     </pattern>
+
+    <mask id="gridMask">
+      <rect width="1920" height="640" fill="url(#gridFade)"/>
+    </mask>
+
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="3" stdDeviation="7" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <filter id="softTeal" x="-140%" y="-140%" width="380%" height="380%">
+      <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#2fd3c0" flood-opacity="0.45"/>
+    </filter>
   </defs>
 
-  <rect width="1200" height="400" fill="url(#base)"/>
+  <rect width="1920" height="640" fill="url(#bg)"/>
 
-  <ellipse cx="230" cy="90" rx="360" ry="260" fill="url(#aurora1)"/>
-  <ellipse cx="620" cy="340" rx="430" ry="280" fill="url(#aurora2)"/>
-  <ellipse cx="900" cy="60" rx="340" ry="240" fill="url(#aurora3)"/>
-  <ellipse cx="1100" cy="330" rx="300" ry="220" fill="url(#aurora4)"/>
+  <ellipse cx="1580" cy="120" rx="720" ry="440" fill="url(#washBlue)"/>
+  <ellipse cx="1660" cy="560" rx="620" ry="380" fill="url(#washTeal)"/>
 
-  <rect width="1200" height="400" fill="url(#grid)"/>
+  <circle cx="1520" cy="320" r="372" fill="none" stroke="#ffffff" stroke-opacity="0.04" stroke-width="1"/>
+  <circle cx="1520" cy="320" r="300" fill="none" stroke="#ffffff" stroke-opacity="0.028" stroke-width="1"/>
 
-  <g stroke="#ffffff" stroke-linecap="round">
-    <circle cx="150" cy="70" r="4" stroke-opacity="0.35" fill="none" stroke-width="1.5"/>
-    <circle cx="1050" cy="84" r="6" stroke-opacity="0.30" fill="none" stroke-width="1.5"/>
-    <circle cx="60" cy="360" r="3" stroke-opacity="0.30" fill="none" stroke-width="1.5"/>
-    <circle cx="1140" cy="360" r="4" stroke-opacity="0.28" fill="none" stroke-width="1.5"/>
-    <line x1="330" y1="56" x2="368" y2="56" stroke-opacity="0.28" stroke-width="1.5"/>
-    <line x1="840" y1="72" x2="886" y2="72" stroke-opacity="0.28" stroke-width="1.5"/>
+  <rect width="1920" height="640" fill="url(#grid)" mask="url(#gridMask)"/>
+
+  <line x1="966" y1="150" x2="966" y2="520" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1"/>
+
+  <g stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5" stroke-linecap="round">
+    <path d="M114 104 h12 M120 98 v12"/>
+    <path d="M1794 104 h12 M1800 98 v12"/>
+    <path d="M114 536 h12 M120 530 v12"/>
+    <path d="M1794 536 h12 M1800 530 v12"/>
   </g>
 
-  <text x="600" y="96" text-anchor="middle" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="60" font-weight="700" fill="url(#titleGrad)" letter-spacing="6">AI Agent 作品集</text>
+  <!-- ================= LEFT · typography ================= -->
+  <rect x="120" y="194" width="46" height="4" rx="2" fill="#5b8def" fill-opacity="0.9"/>
+  <text x="186" y="203" font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="17" font-weight="600" letter-spacing="4.5" fill="#7c8a9e">SELECTED WORK · AI SYSTEMS</text>
 
-  <text x="600" y="152" text-anchor="middle" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="21" font-weight="400" fill="#cbd5e1" letter-spacing="2">用工程手段驯化 AI，把黑盒变成可复现的生产线</text>
+  <text x="120" y="314" font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,'Hiragino Sans GB','PingFang SC',sans-serif" font-size="92" font-weight="700" letter-spacing="1" fill="#eaf1fa">AI Agent 作品集</text>
 
-  <rect x="480" y="182" width="240" height="2" rx="1" fill="url(#divider)"/>
+  <text x="120" y="388" font-family="'Hiragino Sans GB','PingFang SC','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="31" font-weight="400" letter-spacing="1" fill="#a9b5c7">用工程手段驯化 AI，把「黑盒」变成「可复现的生产线」</text>
 
-  <rect x="80" y="218" width="500" height="158" rx="18" fill="#ffffff" fill-opacity="0.04" stroke="#8b5cf6" stroke-opacity="0.35" stroke-width="1.5"/>
-  <rect x="104" y="238" width="4" height="118" rx="2" fill="#a78bfa" fill-opacity="0.7"/>
-  <text x="128" y="262" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="21" font-weight="600" fill="#f1f5f9">评价域工作流生产 Skill</text>
-  <text x="128" y="298" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" fill="#a5b4fc" letter-spacing="1">四层约束 · 脚本门禁 · 生产台账</text>
-  <text x="128" y="340" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="17" font-weight="600" fill="#e2e8f0">26× 提速 &#160;&#160;·&#160;&#160; 94% 命中 &#160;&#160;·&#160;&#160; 0 想象节点</text>
+  <line x1="120" y1="428" x2="270" y2="428" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1"/>
+  <text x="120" y="468" font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="16" font-weight="600" letter-spacing="3.2" fill="#667a8f">PYTHON · ZERO-DEPENDENCY · MULTI-AGENT · DETERMINISTIC</text>
 
-  <rect x="620" y="218" width="500" height="158" rx="18" fill="#ffffff" fill-opacity="0.04" stroke="#06b6d4" stroke-opacity="0.35" stroke-width="1.5"/>
-  <rect x="644" y="238" width="4" height="118" rx="2" fill="#22d3ee" fill-opacity="0.7"/>
-  <text x="668" y="262" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="21" font-weight="600" fill="#f1f5f9">大型活动散场推演 Agent</text>
-  <text x="668" y="298" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" fill="#67e8f9" letter-spacing="1">确定性引擎 · 单写者结算 · 具名签发</text>
-  <text x="668" y="340" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="17" font-weight="600" fill="#e2e8f0">38/38 测试 &#160;&#160;·&#160;&#160; 8/8 门槛 &#160;&#160;·&#160;&#160; 93 分审计</text>
+  <!-- ================= RIGHT · project 01 · pipeline ================= -->
+  <text x="1020" y="192" font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="46" font-weight="700" fill="#5b8def">01</text>
+  <text x="1100" y="186" font-family="'Hiragino Sans GB','PingFang SC','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="29" font-weight="600" fill="#e6edf7">评价域工作流生产 Skill</text>
+  <text x="1800" y="186" text-anchor="end" font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,'Hiragino Sans GB',sans-serif" font-size="19" font-weight="600" fill="#8fb4f5">26× 提速 · 94% 命中</text>
+
+  <text x="1020" y="226" font-family="'Hiragino Sans GB','PingFang SC','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="21" fill="#9aa7ba">模糊诉求 → 可上线的 LLM 工作流</text>
+  <text x="1020" y="256" font-family="'Hiragino Sans GB','PingFang SC','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="17" letter-spacing="0.5" fill="#6c7a8f">四层约束 · 脚本门禁 · 生产台账</text>
+
+  <line x1="1020" y1="316" x2="1780" y2="316" stroke="url(#pipeLine)" stroke-width="1.5"/>
+
+  <g stroke="#ffffff" stroke-opacity="0.15" stroke-width="1.5">
+    <line x1="1083.3" y1="302" x2="1083.3" y2="330"/>
+    <line x1="1210" y1="302" x2="1210" y2="330"/>
+    <line x1="1336.7" y1="302" x2="1336.7" y2="330"/>
+    <line x1="1463.3" y1="302" x2="1463.3" y2="330"/>
+    <line x1="1590" y1="302" x2="1590" y2="330"/>
+    <line x1="1716.7" y1="302" x2="1716.7" y2="330"/>
+  </g>
+  <g fill="#8fb4f5" fill-opacity="0.6">
+    <rect x="1081" y="314" width="4.6" height="4.6"/>
+    <rect x="1207.7" y="314" width="4.6" height="4.6"/>
+    <rect x="1334.4" y="314" width="4.6" height="4.6"/>
+    <rect x="1461" y="314" width="4.6" height="4.6"/>
+    <rect x="1587.7" y="314" width="4.6" height="4.6"/>
+    <rect x="1714.4" y="314" width="4.6" height="4.6"/>
+  </g>
+
+  <g>
+    <circle cx="1020" cy="316" r="7.5" fill="#0a1120"/>
+    <circle cx="1020" cy="316" r="5.5" fill="#5b8def" fill-opacity="0.85"/>
+    <circle cx="1146.7" cy="316" r="7.5" fill="#0a1120"/>
+    <circle cx="1146.7" cy="316" r="5.5" fill="#5b8def" fill-opacity="0.85"/>
+    <circle cx="1273.3" cy="316" r="7.5" fill="#0a1120"/>
+    <circle cx="1273.3" cy="316" r="5.5" fill="#5b8def" fill-opacity="0.85"/>
+    <circle cx="1400" cy="316" r="7.5" fill="#0a1120"/>
+    <circle cx="1400" cy="316" r="5.5" fill="#5b8def" fill-opacity="0.85"/>
+    <circle cx="1526.7" cy="316" r="7.5" fill="#0a1120"/>
+    <circle cx="1526.7" cy="316" r="5.5" fill="#5b8def" fill-opacity="0.85"/>
+    <circle cx="1653.3" cy="316" r="7.5" fill="#0a1120"/>
+    <circle cx="1653.3" cy="316" r="5.5" fill="#5b8def" fill-opacity="0.85"/>
+    <circle cx="1780" cy="316" r="11" fill="#0a1120" stroke="#8fb4f5" stroke-width="2"/>
+    <circle cx="1780" cy="316" r="4.5" fill="#8fb4f5"/>
+  </g>
+
+  <g font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="14" fill="#66748a" text-anchor="middle">
+    <text x="1020" y="360">S1</text>
+    <text x="1146.7" y="360">S2</text>
+    <text x="1273.3" y="360">S3</text>
+    <text x="1400" y="360">S4</text>
+    <text x="1526.7" y="360">S5</text>
+    <text x="1653.3" y="360">S6</text>
+    <text x="1780" y="360">S7</text>
+  </g>
+
+  <g stroke="#ffffff" stroke-opacity="0.10" stroke-width="1">
+    <line x1="1020" y1="328" x2="1020" y2="378"/>
+    <line x1="1146.7" y1="328" x2="1146.7" y2="378"/>
+    <line x1="1273.3" y1="328" x2="1273.3" y2="378"/>
+    <line x1="1400" y1="328" x2="1400" y2="378"/>
+    <line x1="1526.7" y1="328" x2="1526.7" y2="378"/>
+    <line x1="1653.3" y1="328" x2="1653.3" y2="378"/>
+    <line x1="1780" y1="328" x2="1780" y2="378"/>
+  </g>
+  <g fill="#ffffff" fill-opacity="0.22">
+    <rect x="1017.5" y="378" width="5" height="5"/>
+    <rect x="1144.2" y="378" width="5" height="5"/>
+    <rect x="1270.8" y="378" width="5" height="5"/>
+    <rect x="1397.5" y="378" width="5" height="5"/>
+    <rect x="1524.2" y="378" width="5" height="5"/>
+    <rect x="1650.8" y="378" width="5" height="5"/>
+    <rect x="1777.5" y="378" width="5" height="5"/>
+  </g>
+
+  <!-- ================= RIGHT · project 02 · convergence ================= -->
+  <text x="1020" y="428" font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="46" font-weight="700" fill="#2fd3c0">02</text>
+  <text x="1100" y="422" font-family="'Hiragino Sans GB','PingFang SC','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="29" font-weight="600" fill="#e6edf7">大型活动散场推演 Agent</text>
+  <text x="1800" y="422" text-anchor="end" font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,'Hiragino Sans GB',sans-serif" font-size="19" font-weight="600" fill="#6fe7da">38/38 测试 · 93 分审计</text>
+
+  <text x="1020" y="462" font-family="'Hiragino Sans GB','PingFang SC','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="21" fill="#9aa7ba">并行意图 → 单写者结算 → 人工签发</text>
+  <text x="1020" y="492" font-family="'Hiragino Sans GB','PingFang SC','Helvetica Neue',Helvetica,Arial,sans-serif" font-size="17" letter-spacing="0.5" fill="#6c7a8f">确定性引擎 · 硬门禁 · 权限边界</text>
+
+  <g fill="none" stroke="#2fd3c0" stroke-opacity="0.42" stroke-width="1.5">
+    <path d="M1148 510 C 1290 510, 1350 543, 1458 543"/>
+    <path d="M1148 532 C 1290 532, 1350 543, 1458 543"/>
+    <path d="M1148 554 C 1290 554, 1350 543, 1458 543"/>
+    <path d="M1148 576 C 1290 576, 1350 543, 1458 543"/>
+  </g>
+
+  <g fill="#2fd3c0" fill-opacity="0.9">
+    <circle cx="1140" cy="510" r="4.5"/>
+    <circle cx="1140" cy="532" r="4.5"/>
+    <circle cx="1140" cy="554" r="4.5"/>
+    <circle cx="1140" cy="576" r="4.5"/>
+  </g>
+
+  <circle cx="1470" cy="543" r="13" fill="#0a1120" stroke="#2fd3c0" stroke-width="2" filter="url(#softTeal)"/>
+  <circle cx="1470" cy="543" r="5" fill="#6fe7da"/>
+
+  <path d="M1483 543 H1706" fill="none" stroke="#2fd3c0" stroke-opacity="0.6" stroke-width="1.5"/>
+
+  <g filter="url(#soft)">
+    <rect x="1706" y="530" width="26" height="26" rx="7" fill="#0c1622" stroke="#6fe7da" stroke-width="1.6"/>
+  </g>
+  <path d="M1712 543 l4 4.5 l8.5 -9.5" fill="none" stroke="#6fe7da" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <path d="M1483 543 C 1545 543, 1560 601, 1596 601" fill="none" stroke="#e0736a" stroke-opacity="0.6" stroke-width="1.4"/>
+  <g stroke="#e0736a" stroke-opacity="0.75" stroke-width="1.6" stroke-linecap="round">
+    <circle cx="1602" cy="601" r="6.5" fill="none"/>
+    <line x1="1597.4" y1="606.6" x2="1606.6" y2="595.4"/>
+  </g>
+
 </svg>
