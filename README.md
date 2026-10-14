@@ -36,25 +36,39 @@ cd review-workflow-builder/platform && python platform.py   # → http://127.0.0
 ### AI 技术架构
 
 ```mermaid
-flowchart TB
-    REQ["业务诉求（自然语言）"] --> S1
+%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#1e3a5f', 'primaryTextColor': '#e6edf3', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b', 'fontSize': '13px', 'clusterBkg': '#0f1b2d', 'clusterBorder': '#2a3a55', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 18, 'rankSpacing': 24, 'padding': 6}}}%%
+flowchart LR
+    REQ["业务诉求"]:::in --> S1
 
-    subgraph CTRL["控制面 · Skill 编排 + 约束（SKILL.md / check_*.py / ledger.py）"]
-        S1["S1 业务澄清"] --> S2["S2 依赖分析"] --> S3["S3 流程拆解<br/>LLM 推理与选型"] --> S4["S4 节点映射"] --> S5["S5 起草 Prompt<br/>LLM 生成 + schema"] --> S6["S6 方法论审查"] --> S7["S7 落地跑通"]
-        LIB["两层节点库<br/>平台 12 类 + 评价域业务节点"] -.->|节点必须有出处| S4
-        S3 -.->|产物落文件| GATE["门禁脚本"]
-        GATE -.->|通过才放行| S4
-        GATE --> LEDGER["台账 ledger.json"]
+    subgraph SKILL["Skill 编排 · S1–S7（SKILL.md）"]
+        direction LR
+        S1["S1 澄清"]:::det --> S2["S2 依赖"]:::det --> S3["S3 拆解·LLM"]:::ai --> S4["S4 映射"]:::det --> S5["S5 Prompt·LLM"]:::ai --> S6["S6 审查"]:::det --> S7["S7 落地"]:::det
     end
 
-    subgraph DATA["数据面 · FlowBench 运行平台（platform.py）"]
-        DEPLOY["导入 → 发布"] --> RUN["试运行（逐节点执行）"] --> RB["回读断言 · 节点级定位"]
+    subgraph FLOW["FlowBench 数据面（platform.py）"]
+        direction LR
+        DEPLOY["导入→发布"]:::det --> EXEC["试运行"]:::det --> RB["回读断言"]:::det
     end
 
-    EVAL["验证：盲测逐节点判分 · 多份独立复现"]
+    subgraph LOOP["自动化验证闭环"]
+        direction LR
+        BLIND["盲测判分"]:::det --> FIX["回流修正"]:::det
+    end
+
+    LIB["两层节点库"]:::det -.->|出处| S4
+    GATE["脚本门禁 check_*.py"]:::det -.->|校验| S3
+    LEDGER["台账 ledger.json"]:::det -.->|状态| S6
+    TOOLS["工具节点 / Mock 接口"]:::det -.->|调用| EXEC
+    HUMAN["用户确认 · 人审兜底"]:::human -.->|人工确认| S2
 
     S7 --> DEPLOY
-    RB --> EVAL
+    RB --> BLIND
+    FIX -.->|不通过重走| S3
+
+    classDef in fill:#1f2937,stroke:#64748b,color:#cbd5e1;
+    classDef ai fill:#134e4a,stroke:#2dd4bf,color:#ecfeff;
+    classDef det fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff;
+    classDef human fill:#78350f,stroke:#fbbf24,color:#fffbeb;
 ```
 
 **关键产品决策。**
@@ -90,33 +104,38 @@ cd event-egress-agent && python3 server.py --port 8927   # → http://127.0.0.1:
 ### AI 技术架构
 
 ```mermaid
-flowchart TB
-    NL["自然语言事件"] --> CHG
-    CASE["场馆 / 客群 / 出口合同（只读）"] --> CHG
+%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#1e3a5f', 'primaryTextColor': '#e6edf3', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b', 'fontSize': '13px', 'clusterBkg': '#0f1b2d', 'clusterBorder': '#2a3a55', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 18, 'rankSpacing': 24, 'padding': 6}}}%%
+flowchart LR
+    NL["自然语言事件"]:::in --> CHG
+    CASE["场馆/客群/出口合同"]:::in --> CHG
 
-    subgraph LLM["① LLM 层 · 只做理解与表达（live_agent.py）"]
+    subgraph AI["AI 层 · Multi-Agent（live_agent.py）"]
         direction LR
-        CHG["变化理解 Agent<br/>自然语言 → 结构化变化草案"] --> PLAN["方案规划<br/>A / B / C 候选"]
-        PLAN --> C1["客群 Agent ×4<br/>每轮只表达出行意图"]
+        CHG["变化理解 Agent"]:::ai --> PLAN["方案规划 A/B/C"]:::ai --> C1["客群 Agent ×4"]:::ai
     end
 
-    subgraph DET["② 确定性层 · 唯一事实来源（map_engine.py）"]
+    subgraph DET["确定性层（map_engine.py）"]
         direction LR
-        ENGINE["World Simulator<br/>单写者结算容量 / 队列 / 完成数"] --> REPLAN["局部重规划<br/>仅调整受影响客群"]
-        ENGINE --- EVID["证据摘要<br/>逐轮回放 · 可校验等价"]
+        SIM["World Simulator<br/>唯一编排器 · 单写者结算"]:::det --> REPLAN["局部重规划"]:::det
+        SIM --> EVID["证据摘要"]:::det
     end
 
-    subgraph HUMAN["③ 人工层 · 责任签发（project_rules.py）"]
+    subgraph HUM["人工签发层（project_rules.py）"]
         direction LR
-        GATE["门禁复核"] --> SIGN["具名签发<br/>姓名 + 处理说明"]
+        CHECK["门禁复核"]:::det --> SIGN["具名签发"]:::human
     end
 
-    BOUND["权限边界：封路 / 调度 / 地图写回 / 公众引导 → 拒绝"]
+    BOUND["403 权限边界"]:::det
 
-    C1 -.->|并行意图| ENGINE
-    REPLAN --> GATE
-    EVID --> GATE
-    SIGN -.-> BOUND
+    C1 -.->|并行意图| SIM
+    REPLAN --> CHECK
+    EVID --> CHECK
+    SIGN --> BOUND
+
+    classDef in fill:#1f2937,stroke:#64748b,color:#cbd5e1;
+    classDef ai fill:#134e4a,stroke:#2dd4bf,color:#ecfeff;
+    classDef det fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff;
+    classDef human fill:#78350f,stroke:#fbbf24,color:#fffbeb;
 ```
 
 **关键产品决策。**
