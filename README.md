@@ -85,41 +85,28 @@ cd review-workflow-builder/platform && python platform.py   # → http://127.0.0
 ### AI 技术架构
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#0f1b2d', 'primaryTextColor': '#c9d1d9', 'primaryBorderColor': '#2a3a55', 'lineColor': '#8b949e', 'fontSize': '15px', 'clusterBkg': '#0c1422', 'clusterBorder': '#24344d', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 30, 'rankSpacing': 40, 'padding': 12}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#0f1b2d', 'primaryTextColor': '#c9d1d9', 'primaryBorderColor': '#2a3a55', 'lineColor': '#8b949e', 'fontSize': '15px', 'clusterBkg': '#0c1422', 'clusterBorder': '#24344d', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 30, 'rankSpacing': 45, 'padding': 12}}}%%
 flowchart TB
-    subgraph IN["输入"]
-        direction LR
-        REQ["业务诉求"]:::in
-    end
+    REQ["业务诉求（自然语言）"]:::in --> S1
+    S1["S1 业务澄清 · 只问业务四问"]:::base -->|01-画像.md| S2["S2 依赖分析 · 推断依赖、标缺口"]:::base
+    S2 -->|02-依赖清单.md| S3["S3 流程拆解 · 五步法 · LLM"]:::ai
+    S3 -->|03-拆解.md| S4["S4 节点映射 · 节点必须有出处"]:::base
+    S4 -->|04-节点方案.md| S5["S5 Prompt 起草 · LLM · 严格 schema"]:::ai
+    S5 -->|05-prompts/| S6["S6 方法论审查 · 五条清零"]:::base
+    S6 -->|06-审查报告.md| S7["S7 平台落地 · 编译 DSL"]:::base
+    S7 -->|07-dsl.json| DEPLOY["FlowBench（platform.py）<br/>导入 → 发布 → 试运行 → 回读断言"]:::base
+    DEPLOY -->|08-跑通报告| VERIFY{"预埋标准答案盲测<br/>逐节点判分"}
+    VERIFY -->|通过| DONE["跑通 · 输出可复现工作流"]:::human
+    VERIFY -.->|不过 · bad case| ATTR["七段归因"]:::ai
+    ATTR --> REOPEN["ledger reopen · 级联重走"]:::human
+    REOPEN -.-> S3
 
-    subgraph SKILL["Skill 编排 · S1–S7（SKILL.md）"]
-        direction LR
-        S1["S1 澄清"]:::base --> S2["S2 依赖"]:::base --> S3["S3 拆解·LLM"]:::ai --> S4["S4 映射"]:::base --> S5["S5 Prompt·LLM"]:::ai --> S6["S6 审查"]:::base --> S7["S7 落地"]:::base
-    end
-
-    subgraph CTRL["约束与控制 · 贯穿 S1–S7（check_*.py / ledger.py）"]
-        direction LR
-        LIB["两层节点库"]:::base
-        GATE["脚本门禁"]:::base
-        LEDGER["台账 ledger.json"]:::base
-        HUMAN["用户确认 · 人审兜底"]:::human
-    end
-
-    subgraph FLOW["数据面 · FlowBench（platform.py）"]
-        direction LR
-        DEPLOY["导入 → 发布"]:::base --> EXEC["试运行"]:::base --> RB["回读断言"]:::base
-    end
-
-    subgraph LOOP["自动化验证闭环"]
-        direction LR
-        BLIND["盲测判分"]:::base --> FIX["回流修正"]:::base
-    end
-
-    IN --> SKILL
-    SKILL --> CTRL
-    CTRL --> FLOW
-    FLOW --> LOOP
-    LOOP -.->|不通过则重走| SKILL
+    GATE["脚本门禁 check_*.py<br/>每步产物校验"]:::base -.->|不过 · 原地修| S3
+    LEDGER["台账 ledger.json<br/>状态 · 断点续跑"]:::base -.->|每步状态| S5
+    LIB["两层节点库<br/>平台 12 类 + 评价域"]:::base -.->|节点出处| S4
+    RULE["方法论规则集"]:::base -.->|约束| S3
+    RULE -.->|约束| S6
+    HUMAN["用户确认 · 人审兜底"]:::human -.->|人工把关| S2
 
     classDef base fill:#0f1b2d,stroke:#2a3a55,color:#c9d1d9;
     classDef in fill:#0d1117,stroke:#30363d,color:#8b949e;
@@ -185,39 +172,33 @@ cd event-egress-agent && python3 server.py --port 8927   # → http://127.0.0.1:
 ### AI 技术架构
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#0f1b2d', 'primaryTextColor': '#c9d1d9', 'primaryBorderColor': '#2a3a55', 'lineColor': '#8b949e', 'fontSize': '15px', 'clusterBkg': '#0c1422', 'clusterBorder': '#24344d', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 30, 'rankSpacing': 40, 'padding': 12}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#0f1b2d', 'primaryTextColor': '#c9d1d9', 'primaryBorderColor': '#2a3a55', 'lineColor': '#8b949e', 'fontSize': '15px', 'clusterBkg': '#0c1422', 'clusterBorder': '#24344d', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 30, 'rankSpacing': 45, 'padding': 12}}}%%
 flowchart TB
-    subgraph IN["输入"]
-        direction LR
-        NL["自然语言事件"]:::in
-        CASE["场馆 / 客群 / 出口合同"]:::in
-    end
+    NL["自然语言事件"]:::in --> CHG
+    CASE["场馆 / 客群 / 出口合同（只读）"]:::in --> CHG
 
-    subgraph AGENT["AI 层 · Multi-Agent（live_agent.py）"]
-        direction LR
-        CHG["变化理解 Agent"]:::ai --> PLAN["方案规划 A/B/C"]:::ai --> C1["客群 Agent ×4"]:::ai
-    end
+    CHG["变化理解 Agent<br/>NL → 结构化变化草案"]:::ai --> PLAN["方案规划 · A / B / C 候选"]:::ai
+    PLAN --> C1["客群 Agent 1"]:::ai
+    PLAN --> C2["客群 Agent 2"]:::ai
+    PLAN --> C3["客群 Agent 3"]:::ai
+    PLAN --> C4["客群 Agent 4"]:::ai
 
-    subgraph DET["确定性层 · 唯一编排器（map_engine.py）"]
-        direction LR
-        SIM["World Simulator<br/>单写者结算"]:::base --> EVID["证据摘要"]:::base
-        SIM --> REPLAN["局部重规划"]:::base
-    end
+    C1 -->|意图| SIM
+    C2 -->|意图| SIM
+    C3 -->|意图| SIM
+    C4 -->|意图| SIM
 
-    subgraph HUM["人工签发层（project_rules.py）"]
-        direction LR
-        CHECK["门禁复核"]:::base --> SIGN["具名签发"]:::human
-    end
+    SIM["World Simulator · 单写者结算<br/>容量 / 队列 / 完成数"]:::base --> REPLAN["局部重规划 · 仅调受影响客群"]:::base
+    REPLAN -.->|受影响客群重算| SIM
+    SIM --> EVID["证据摘要 · 逐轮回放 · 等价校验"]:::base
+    EVID --> CHECK{"门禁复核<br/>project_rules.py"}
+    CHECK -->|REPLAN_REQUIRED| REPLAN
+    CHECK -->|PENDING_HUMAN_CONFIRMATION| SIGN["具名签发 · 姓名 + 处理说明"]:::human
+    SIGN --> DONE["本地签发记录"]:::human
+    SIGN -.->|越权| BOUND["现实动作 → 403<br/>EXTERNAL_AUTHORITY_REQUIRED"]:::base
 
-    subgraph BND["权限边界"]
-        direction LR
-        BOUND["现实动作 → 403"]:::base
-    end
-
-    IN --> AGENT
-    AGENT -->|并行意图| DET
-    DET -->|证据 + 结论| HUM
-    HUM --> BND
+    CONTRACT["五类合同 · 进入 Coding 前定死<br/>世界 / 方案 / 事件 / 意图 / 证据"]:::base -.->|约束| CHG
+    CONTRACT -.->|约束| SIM
 
     classDef base fill:#0f1b2d,stroke:#2a3a55,color:#c9d1d9;
     classDef in fill:#0d1117,stroke:#30363d,color:#8b949e;
