@@ -8,24 +8,73 @@
 
 ## 项目导航
 
-| | 01 评价域工作流生产 Skill | 02 大型活动散场推演 Agent |
-|---|---|---|
-| **一句话定位** | 把模糊的业务诉求，自动生产成可上线、可复现的 LLM 工作流 | 回答「一群人同时离场，方案到底成不成立」的可签署推演台 |
-| **核心能力** | Skill 工程化 · 脚本门禁 · 两层节点库 · 盲测验证 | 多 Agent 协作 · 确定性仿真 · 具名签发 · 可追溯证据 |
-| **核心指标** | 25.75 → 2 人日 · 命中率 94% · 想象节点 0 | 38/38 测试 · 独立审计 93 分 · B 方案 0 溢出 |
-| **详情** | → [项目 README](review-workflow-builder/README.md) | → [项目 README](event-egress-agent/README.md) |
+<div align="center">
+  <table border="0" cellspacing="8" cellpadding="0" width="100%">
+    <tr>
+      <td width="50%" valign="top" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:12px; padding:20px 22px; text-align:left;">
+        <div style="font-size:12px; font-weight:700; letter-spacing:2px; color:#5b8def;">01</div>
+        <div style="font-size:18px; font-weight:700; color:#e6edf3; margin-top:6px;">评价域工作流生产 Skill</div>
+        <div style="font-size:13px; color:#8b949e; margin-top:8px; line-height:1.6;">把模糊的业务诉求，自动生产成可上线、可复现的 LLM 工作流</div>
+        <div style="margin-top:12px; line-height:2.2;">
+          <span style="background-color:#1f2937; color:#9fb3cc; border-radius:6px; padding:2px 9px; font-size:11px;">Skill 工程化</span>
+          <span style="background-color:#1f2937; color:#9fb3cc; border-radius:6px; padding:2px 9px; font-size:11px;">脚本门禁</span>
+          <span style="background-color:#1f2937; color:#9fb3cc; border-radius:6px; padding:2px 9px; font-size:11px;">两层节点库</span>
+          <span style="background-color:#1f2937; color:#9fb3cc; border-radius:6px; padding:2px 9px; font-size:11px;">盲测验证</span>
+        </div>
+        <div style="margin-top:14px;">
+          <a href="review-workflow-builder/README.md" style="color:#5b8def; font-weight:600; font-size:13px; text-decoration:none;">查看项目详情 →</a>
+        </div>
+      </td>
+      <td width="50%" valign="top" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:12px; padding:20px 22px; text-align:left;">
+        <div style="font-size:12px; font-weight:700; letter-spacing:2px; color:#2fd3c0;">02</div>
+        <div style="font-size:18px; font-weight:700; color:#e6edf3; margin-top:6px;">大型活动散场推演 Agent</div>
+        <div style="font-size:13px; color:#8b949e; margin-top:8px; line-height:1.6;">回答「一群人同时离场，方案到底成不成立」的可签署推演台</div>
+        <div style="margin-top:12px; line-height:2.2;">
+          <span style="background-color:#1f2937; color:#9fb3cc; border-radius:6px; padding:2px 9px; font-size:11px;">Multi-Agent 协作</span>
+          <span style="background-color:#1f2937; color:#9fb3cc; border-radius:6px; padding:2px 9px; font-size:11px;">确定性仿真</span>
+          <span style="background-color:#1f2937; color:#9fb3cc; border-radius:6px; padding:2px 9px; font-size:11px;">具名签发</span>
+          <span style="background-color:#1f2937; color:#9fb3cc; border-radius:6px; padding:2px 9px; font-size:11px;">可追溯证据</span>
+        </div>
+        <div style="margin-top:14px;">
+          <a href="event-egress-agent/README.md" style="color:#2fd3c0; font-weight:600; font-size:13px; text-decoration:none;">查看项目详情 →</a>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ---
 
-## 01 · 评价域工作流生产 Skill
+## <span style="color:#5b8def">01</span> · 评价域工作流生产 Skill
 
 **业务问题。** 评价域已有不少 AI 工作流带来业务价值，但「生产工作流本身」仍靠少数人手工完成——单条约 25.75 人日，门槛高、方法论内隐、迭代贵。更根本的矛盾是：AI 天生不可信（会想象节点、跳步、假称完成），而工程交付要求稳定可复现。
 
 **核心成果。**
 
-- 单条工作流生产：25.75 → **2 人日**（约 26 倍）
-- 预埋标准答案盲测：节点命中率 31%–69% → **94%**，想象节点 1.7/次 → **0**，稳定执行率 83% → **100%**
-- 5 条真实任务的完整产物链，4 条在 FlowBench 跑通（如「评价质量自动审核」19 节点 / 6 个 LLM prompt / 5 用例，含一次接口 500 的错误注入与节点级定位）；第 5 条在流程拆解阶段被开销预估表拦下，作为反例保留
+<div align="center">
+  <table border="0" cellspacing="8" cellpadding="0" width="100%">
+    <tr>
+      <td align="center" width="25%" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:10px; padding:16px 8px;">
+        <div style="font-size:24px; font-weight:700; color:#5b8def; line-height:1.1;">26×</div>
+        <div style="font-size:12px; color:#8b949e; margin-top:6px;">生产提速<br/>25.75 → 2 人日</div>
+      </td>
+      <td align="center" width="25%" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:10px; padding:16px 8px;">
+        <div style="font-size:24px; font-weight:700; color:#5b8def; line-height:1.1;">94%</div>
+        <div style="font-size:12px; color:#8b949e; margin-top:6px;">盲测节点命中率</div>
+      </td>
+      <td align="center" width="25%" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:10px; padding:16px 8px;">
+        <div style="font-size:24px; font-weight:700; color:#5b8def; line-height:1.1;">0</div>
+        <div style="font-size:12px; color:#8b949e; margin-top:6px;">想象节点</div>
+      </td>
+      <td align="center" width="25%" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:10px; padding:16px 8px;">
+        <div style="font-size:24px; font-weight:700; color:#5b8def; line-height:1.1;">100%</div>
+        <div style="font-size:12px; color:#8b949e; margin-top:6px;">稳定执行率</div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+预埋标准答案盲测（封存标准答案、只喂原始诉求、跑完开封逐节点判分）：命中率 31%–69% → **94%**，想象节点 1.7/次 → **0**，稳定执行率 83% → **100%**。5 条真实任务的完整产物链，4 条在 FlowBench 跑通（如「评价质量自动审核」19 节点 / 6 个 LLM prompt / 5 用例，含一次接口 500 的错误注入与节点级定位）；第 5 条在流程拆解阶段被开销预估表拦下，作为反例保留。
 
 **Demo 展示。** 自建 FlowBench 工作流平台，导入 demo 脚本即可发布、试运行并回读节点级结果：
 
@@ -81,11 +130,34 @@ flowchart LR
 
 ---
 
-## 02 · 大型活动散场推演 Agent
+## <span style="color:#2fd3c0">02</span> · 大型活动散场推演 Agent
 
 **业务问题。** 普通路线推荐回答「一个人怎么走」；散场是**多人共享有限出口与接驳资源**的问题，容量还会变（降雨）、会临时关闭。旧静态方案事件后无法响应，人工改表只看眼前问题、看不到风险转移。这类方案真正要交付的，是**可比较、可追溯、可签字**的证据。
 
 **核心成果。** 固定案例 12,000 人 / 4 客群 / 4 出口 / 12 轮（每轮 2 分钟；第 3 轮降雨、第 4–6 轮东门关闭）：
+
+<div align="center">
+  <table border="0" cellspacing="8" cellpadding="0" width="100%">
+    <tr>
+      <td align="center" width="25%" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:10px; padding:16px 8px;">
+        <div style="font-size:24px; font-weight:700; color:#2fd3c0; line-height:1.1;">0</div>
+        <div style="font-size:12px; color:#8b949e; margin-top:6px;">溢出轮次（B 方案）</div>
+      </td>
+      <td align="center" width="25%" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:10px; padding:16px 8px;">
+        <div style="font-size:24px; font-weight:700; color:#2fd3c0; line-height:1.1;">16 分钟</div>
+        <div style="font-size:12px; color:#8b949e; margin-top:6px;">B 方案清场用时</div>
+      </td>
+      <td align="center" width="25%" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:10px; padding:16px 8px;">
+        <div style="font-size:24px; font-weight:700; color:#2fd3c0; line-height:1.1;">93 分</div>
+        <div style="font-size:12px; color:#8b949e; margin-top:6px;">独立审计（78 → 93）</div>
+      </td>
+      <td align="center" width="25%" style="background-color:#0f1b2d; border:1px solid #2a3a55; border-radius:10px; padding:16px 8px;">
+        <div style="font-size:24px; font-weight:700; color:#2fd3c0; line-height:1.1;">8 / 8</div>
+        <div style="font-size:12px; color:#8b949e; margin-top:6px;">硬门槛</div>
+      </td>
+    </tr>
+  </table>
+</div>
 
 - **A 就近出口** — 完成 10,280 / 12,000，最高密度 2.767，溢出 9 轮 → 不可签发
 - **B 韧性均衡** — 完成 12,000 / 12,000，16 分钟，最高密度 0.476，0 溢出 → **通过门禁，可提交复核**
@@ -99,7 +171,9 @@ flowchart LR
 cd event-egress-agent && python3 server.py --port 8927   # → http://127.0.0.1:8927
 ```
 
-![散场推演 A/B/C 三方案审计结果](event-egress-agent/qa/audit-after-desktop-1440.png)
+<div align="center">
+  <img src="event-egress-agent/qa/audit-after-desktop-1440.png" alt="散场推演 A/B/C 三方案审计结果" width="96%" style="border:1px solid #30363d; border-radius:8px;" />
+</div>
 
 ### AI 技术架构
 
