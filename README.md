@@ -85,39 +85,46 @@ cd review-workflow-builder/platform && python platform.py   # → http://127.0.0
 ### AI 技术架构
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#1e3a5f', 'primaryTextColor': '#e6edf3', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b', 'fontSize': '13px', 'clusterBkg': '#0f1b2d', 'clusterBorder': '#2a3a55', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 18, 'rankSpacing': 24, 'padding': 6}}}%%
-flowchart LR
-    REQ["业务诉求"]:::in --> S1
+%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#0f1b2d', 'primaryTextColor': '#c9d1d9', 'primaryBorderColor': '#2a3a55', 'lineColor': '#8b949e', 'fontSize': '15px', 'clusterBkg': '#0c1422', 'clusterBorder': '#24344d', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 30, 'rankSpacing': 40, 'padding': 12}}}%%
+flowchart TB
+    subgraph IN["输入"]
+        direction LR
+        REQ["业务诉求"]:::in
+    end
 
     subgraph SKILL["Skill 编排 · S1–S7（SKILL.md）"]
         direction LR
-        S1["S1 澄清"]:::det --> S2["S2 依赖"]:::det --> S3["S3 拆解·LLM"]:::ai --> S4["S4 映射"]:::det --> S5["S5 Prompt·LLM"]:::ai --> S6["S6 审查"]:::det --> S7["S7 落地"]:::det
+        S1["S1 澄清"]:::base --> S2["S2 依赖"]:::base --> S3["S3 拆解·LLM"]:::ai --> S4["S4 映射"]:::base --> S5["S5 Prompt·LLM"]:::ai --> S6["S6 审查"]:::base --> S7["S7 落地"]:::base
     end
 
-    subgraph FLOW["FlowBench 数据面（platform.py）"]
+    subgraph CTRL["约束与控制 · 贯穿 S1–S7（check_*.py / ledger.py）"]
         direction LR
-        DEPLOY["导入→发布"]:::det --> EXEC["试运行"]:::det --> RB["回读断言"]:::det
+        LIB["两层节点库"]:::base
+        GATE["脚本门禁"]:::base
+        LEDGER["台账 ledger.json"]:::base
+        HUMAN["用户确认 · 人审兜底"]:::human
+    end
+
+    subgraph FLOW["数据面 · FlowBench（platform.py）"]
+        direction LR
+        DEPLOY["导入 → 发布"]:::base --> EXEC["试运行"]:::base --> RB["回读断言"]:::base
     end
 
     subgraph LOOP["自动化验证闭环"]
         direction LR
-        BLIND["盲测判分"]:::det --> FIX["回流修正"]:::det
+        BLIND["盲测判分"]:::base --> FIX["回流修正"]:::base
     end
 
-    LIB["两层节点库"]:::det -.->|出处| S4
-    GATE["脚本门禁 check_*.py"]:::det -.->|校验| S3
-    LEDGER["台账 ledger.json"]:::det -.->|状态| S6
-    TOOLS["工具节点 / Mock 接口"]:::det -.->|调用| EXEC
-    HUMAN["用户确认 · 人审兜底"]:::human -.->|人工确认| S2
+    IN --> SKILL
+    SKILL --> CTRL
+    CTRL --> FLOW
+    FLOW --> LOOP
+    LOOP -.->|不通过则重走| SKILL
 
-    S7 --> DEPLOY
-    RB --> BLIND
-    FIX -.->|不通过重走| S3
-
-    classDef in fill:#1f2937,stroke:#64748b,color:#cbd5e1;
-    classDef ai fill:#134e4a,stroke:#2dd4bf,color:#ecfeff;
-    classDef det fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff;
-    classDef human fill:#78350f,stroke:#fbbf24,color:#fffbeb;
+    classDef base fill:#0f1b2d,stroke:#2a3a55,color:#c9d1d9;
+    classDef in fill:#0d1117,stroke:#30363d,color:#8b949e;
+    classDef ai fill:#0f2627,stroke:#2dd4bf,color:#c9d1d9;
+    classDef human fill:#251f13,stroke:#f0b429,color:#c9d1d9;
 ```
 
 **关键产品决策。**
@@ -178,38 +185,44 @@ cd event-egress-agent && python3 server.py --port 8927   # → http://127.0.0.1:
 ### AI 技术架构
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#1e3a5f', 'primaryTextColor': '#e6edf3', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b', 'fontSize': '13px', 'clusterBkg': '#0f1b2d', 'clusterBorder': '#2a3a55', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 18, 'rankSpacing': 24, 'padding': 6}}}%%
-flowchart LR
-    NL["自然语言事件"]:::in --> CHG
-    CASE["场馆/客群/出口合同"]:::in --> CHG
+%%{init: {'theme': 'base', 'themeVariables': {'backgroundColor': '#0a1120', 'primaryColor': '#0f1b2d', 'primaryTextColor': '#c9d1d9', 'primaryBorderColor': '#2a3a55', 'lineColor': '#8b949e', 'fontSize': '15px', 'clusterBkg': '#0c1422', 'clusterBorder': '#24344d', 'titleColor': '#9fb3cc'}, 'flowchart': {'nodeSpacing': 30, 'rankSpacing': 40, 'padding': 12}}}%%
+flowchart TB
+    subgraph IN["输入"]
+        direction LR
+        NL["自然语言事件"]:::in
+        CASE["场馆 / 客群 / 出口合同"]:::in
+    end
 
-    subgraph AI["AI 层 · Multi-Agent（live_agent.py）"]
+    subgraph AGENT["AI 层 · Multi-Agent（live_agent.py）"]
         direction LR
         CHG["变化理解 Agent"]:::ai --> PLAN["方案规划 A/B/C"]:::ai --> C1["客群 Agent ×4"]:::ai
     end
 
-    subgraph DET["确定性层（map_engine.py）"]
+    subgraph DET["确定性层 · 唯一编排器（map_engine.py）"]
         direction LR
-        SIM["World Simulator<br/>唯一编排器 · 单写者结算"]:::det --> REPLAN["局部重规划"]:::det
-        SIM --> EVID["证据摘要"]:::det
+        SIM["World Simulator<br/>单写者结算"]:::base --> EVID["证据摘要"]:::base
+        SIM --> REPLAN["局部重规划"]:::base
     end
 
     subgraph HUM["人工签发层（project_rules.py）"]
         direction LR
-        CHECK["门禁复核"]:::det --> SIGN["具名签发"]:::human
+        CHECK["门禁复核"]:::base --> SIGN["具名签发"]:::human
     end
 
-    BOUND["403 权限边界"]:::det
+    subgraph BND["权限边界"]
+        direction LR
+        BOUND["现实动作 → 403"]:::base
+    end
 
-    C1 -.->|并行意图| SIM
-    REPLAN --> CHECK
-    EVID --> CHECK
-    SIGN --> BOUND
+    IN --> AGENT
+    AGENT -->|并行意图| DET
+    DET -->|证据 + 结论| HUM
+    HUM --> BND
 
-    classDef in fill:#1f2937,stroke:#64748b,color:#cbd5e1;
-    classDef ai fill:#134e4a,stroke:#2dd4bf,color:#ecfeff;
-    classDef det fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff;
-    classDef human fill:#78350f,stroke:#fbbf24,color:#fffbeb;
+    classDef base fill:#0f1b2d,stroke:#2a3a55,color:#c9d1d9;
+    classDef in fill:#0d1117,stroke:#30363d,color:#8b949e;
+    classDef ai fill:#0f2627,stroke:#2dd4bf,color:#c9d1d9;
+    classDef human fill:#251f13,stroke:#f0b429,color:#c9d1d9;
 ```
 
 **关键产品决策。**
